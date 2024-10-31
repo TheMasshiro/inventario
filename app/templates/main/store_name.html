@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% set current_page = "profile" %}
+{% block title %}{{ title }}{% endblock %}
+{% block main %}
+    <section class="section is-fullheight has-background-white-ter">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column is-three-quarters">
+                    <div class="box">
+                        <!-- Profile Info -->
+                        <div class="columns is-vcentered">
+                            <div class="column is-one-quarter">
+                                <figure class="image is-128x128 mx-auto">
+                                    <img class="is-rounded"
+                                         src="{{ user.avatar(128) }}"
+                                         alt="{{ user.username }}'s avatar">
+                                </figure>
+                            </div>
+                            <div class="column">
+                                <h1 class="title is-2">{{ user.username }}</h1>
+                                <p>
+                                    <strong>Joined since:</strong> {{ user.created.strftime("%B %d, %Y") if user.created else 'N/A' }}
+                                </p>
+                                <div class="my-5">
+                                    <div class="title is-4 mb-0">Store:</div>
+                                    <div class="title is-3 mt-0">{{ user.store_name if user.store_name else 'N\A' }}</div>
+                                </div>
+                            </div>
+                            <div class="column has-text-right">
+                                <div class="buttons is-flex-direction-column is-align-items-flex-end mt-3">
+                                    <a class="button is-small is-primary mb-2"
+                                       href="{{ url_for("main.edit_profile", username=user.username) }}">Change Password</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Edit Profile Form -->
+            <div class="columns is-centered mt-6">
+                <div class="column is-centered mt-6 is-8-tablet is-6-desktop is-4-widescreen">
+                    <div class="box">
+                        <h2 class="title is-3 has-text-centered">Store</h2>
+                        <form method="POST" action="">
+                            {{ form.hidden_tag() }}
+                            <!-- Store Name Field -->
+                            <div class="field">
+                                {{ form.store_name.label(class="label") }}
+                                <div class="control has-icons-left">
+                                    {{ form.store_name(class="input", placeholder="Enter Store Name", required=true) }}
+                                    <span class="icon is-left">
+                                        <i class="fas fa-store"></i>
+                                    </span>
+                                </div>
+                                {% for error in form.store_name.errors %}<p class="help is-danger">{{ error }}</p>{% endfor %}
+                            </div>
+                            <!-- Submit Button -->
+                            <div class="field is-grouped is-grouped-centered">
+                                <div class="field">
+                                    {{ form.submit(class="button is-primary is-fullwidth") 
+                                    }}
+                                </div>
+                                <div class="control">
+                                    <a class="button is-light"
+                                       href="{{ url_for('main.profile', username=user.username) }}">Cancel</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

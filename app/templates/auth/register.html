@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% set current_page = "register" %}
+{% block title %}Inventario - {{ title }}{% endblock %}
+{% block main %}
+    <section class="hero is-fullheight has-background-white-ter">
+        <div class="hero-body">
+            <div class="container">
+                <div class="columns is-centered">
+                    <div class="column is-8-tablet is-6-desktop is-4-widescreen">
+                        <div class="box">
+                            <h1 class="title has-text-centered is-size-3-mobile is-size-2-tablet">Welcome to Inventario</h1>
+                            <p class="subtitle has-text-centered is-size-6-mobile is-size-5-tablet mb-5">
+                                Register to start tracking and organizing your inventory
+                            </p>
+                            <form action="{{ url_for("auth.register") }}"
+                                  method="POST"
+                                  id="register-form"
+                                  novalidate>
+                                {{ form.hidden_tag() }}
+                                {% with messages =
+                                    get_flashed_messages(with_categories=true) %}
+                                    {% if messages %}
+                                        {%
+                                        for category, message in messages %}
+                                        <div class="notification is-{{ category }} is-light has-text-centered">{{ message }}</div>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endwith %}
+                            <div class="field">
+                                {{ form.username.label(class="label") }}
+                                <div class="control has-icons-left">
+                                    {{ form.username(class="input", placeholder="Username", required=true) }}
+                                    <span class="icon is-left">
+                                        <i class="fas fa-user"></i>
+                                    </span>
+                                </div>
+                                {% for error in form.username.errors %}<p class="help is-danger">{{ error }}</p>{% endfor %}
+                            </div>
+                            <div class="field">
+                                {{ form.password.label(class="label") }}
+                                <div class="field has-addons">
+                                    <div class="control has-icons-left is-expanded">
+                                        {{ form.password(class="input password-field", id="password", placeholder="Password", required=true) }}
+                                        <span class="icon is-left">
+                                            <i class="fas fa-lock"></i>
+                                        </span>
+                                    </div>
+                                    <div class="control">
+                                        <a class="button is-info">
+                                            <span class="icon">
+                                                <i class="fas fa-eye"></i>
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                                {% for error in form.password.errors %}<p class="help is-danger">{{ error }}</p>{% endfor %}
+                            </div>
+                            <div class="field">
+                                {{ form.confirm_password.label(class="label") }}
+                                <div class="field has-addons">
+                                    <div class="control has-icons-left is-expanded">
+                                        {{ form.confirm_password(class="input password-field", placeholder="Password", required=true) }}
+                                        <span class="icon is-left">
+                                            <i class="fas fa-lock"></i>
+                                        </span>
+                                    </div>
+                                    <div class="control">
+                                        <a class="button is-info">
+                                            <span class="icon">
+                                                <i class="fas fa-eye"></i>
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                                {% for error in form.confirm_password.errors %}<p class="help is-danger">{{ error }}</p>{% endfor %}
+                            </div>
+                            <div class="field has-text-centered">
+                                <div class="control">
+                                    <label class="checkbox" id="terms-checkbox">{{ form.terms_and_conditions(required=True) }} I agree to the</label>
+                                    <a class="js-modal-trigger" data-target="terms-and-conditions-modal">Terms and Conditions</a>
+                                </div>
+                                {% for error in form.terms_and_conditions.errors %}<p class="help is-danger">{{ error }}</p>{% endfor %}
+                            </div>
+                            <div class="field mt-5">
+                                {{ form.submit(class="button is-primary is-fullwidth is-medium") 
+                                }}
+                            </div>
+                        </form>
+                        <hr class="has-background-black my-5" />
+                        <div class="has-text-centered mt-5">
+                            <p class="is-size-6 mb-2">Already have an account?</p>
+                            <a href="/login" class="button is-black is-outlined">Log in</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="modal" id="terms-and-conditions-modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Modal title</p>
+            <button class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+            <!-- Content ... -->
+        </section>
+        <footer class="modal-card-foot is-justify-content-center">
+            <button class="button is-primary close-modal" id="agree-to-terms">I Understand and Agree</button>
+        </footer>
+    </div>
+</div>
+{% endblock %}

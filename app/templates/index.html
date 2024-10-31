@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{%
+block main %}
+<section class="hero is-primary is-fullheight-with-navbar">
+    <div class="hero-body">
+        <div class="container">
+            <div class="columns is-vcentered">
+                <div class="column is-5">
+                    <h1 class="title is-2">Welcome to Inventario</h1>
+                    <h2 class="subtitle is-4">Manage Your Store’s Inventory with Ease</h2>
+                    <p class="mb-4">
+                        Keep track of every item effortlessly—Inventario is here to make managing your store’s inventory simple, organized, and stress-free.
+                    </p>
+                    <div class="tags are-medium">
+                        <span class="tag is-primary is-light">Inventory</span>
+                        <span class="tag is-danger is-light">Management</span>
+                        <span class="tag is-success is-light">Efficiency</span>
+                        <span class="tag is-warning is-light">Tracking</span>
+                    </div>
+                </div>
+                <div class="column is-7">
+                    <div class="card">
+                        <div class="card-image">
+                            <figure class="image is-16by9">
+                                <img src="{{ url_for('static', filename='/images/mew.jpeg') }}"
+                                     alt="Inventario app preview"
+                                     class="has-shadow" />
+                            </figure>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Features Section -->
+<section class="section has-background-white-ter">
+    <div class="container">
+        <h2 class="title has-text-centered">Features</h2>
+        <h3 class="subtitle has-text-centered">Explore the functionalities of Inventario</h3>
+        <div class="columns is-multiline">
+            <div class="column is-6">
+                <div class="box has-background-primary-light hvr-float">
+                    <h4 class="title is-4">
+                        <span class="icon has-text-primary">
+                            <i class="fas fa-box" aria-label="Manage Products"></i>
+                        </span>
+                        Product Management
+                    </h4>
+                    <p class="is-size-5">Easily organize and manage your product inventory with detailed entries.</p>
+                </div>
+            </div>
+            <div class="column is-6">
+                <div class="box has-background-warning-light hvr-float">
+                    <h4 class="title is-4">
+                        <span class="icon has-text-primary has-text-warning">
+                            <i class="fas fa-shopping-cart" aria-label="Sales Tracking"></i>
+                        </span>
+                        Sales Tracking
+                    </h4>
+                    <p class="is-size-5">Record store's sales transactions and track revenue with ease.</p>
+                </div>
+            </div>
+            <div class="column is-6">
+                <div class="box has-background-danger-light hvr-float">
+                    <h4 class="title is-4">
+                        <span class="icon has-text-primary has-text-danger">
+                            <i class="fas fa-bell" aria-label="Stock Alerts"></i>
+                        </span>
+                        Automated Stock Alerts
+                    </h4>
+                    <p class="is-size-5">Get notified when stock levels are low to ensure you never run out.</p>
+                </div>
+            </div>
+            <div class="column is-6">
+                <div class="box has-background-link-light hvr-float">
+                    <h4 class="title is-4">
+                        <span class="icon has-text-primary has-text-link">
+                            <i class="fas fa-chart-line" aria-label="Data Insights"></i>
+                        </span>
+                        Data-Driven Insights
+                    </h4>
+                    <p class="is-size-5">Analyze sales performance and inventory turnover to make informed decisions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Footer -->
+<footer class="footer has-background-white-ter">
+    <div class="content has-text-centered">
+        <p>© 2024 TheMasshiro. All Rights Reserved.</p>
+        <div class="mt-2">
+            <a href="/about" class="mr-2">About</a>
+        </div>
+    </div>
+</footer>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Internal Server Error{% endblock %}
+{% block main %}
+    <section class="hero is-fullheight">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <h1 class="title is-1">500</h1>
+                <h2 class="subtitle is-3">Internal Server Error</h2>
+                <p class="is-size-5 mb-5">Oops! Something went wrong on my end. I'm working to fix it.</p>
+                <div class="buttons is-centered">
+                    <a href="{{ url_for("main.index") }}" class="button is-primary">
+                        <span class="icon">
+                            <i class="fas fa-home"></i>
+                        </span>
+                        <span>Go to Homepage</span>
+                    </a>
+                    <a href="javascript:location.reload()" class="button is-light">
+                        <span class="icon">
+                            <i class="fas fa-sync"></i>
+                        </span>
+                        <span>Refresh Page</span>
+                    </a>
+                </div>
+                <div class="notification is-info is-light mt-6">
+                    <p>The administrator has been notified. Sorry for the inconvenience!</p>
+                    <p class="mt-3">If the problem persists, please contact me at github.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

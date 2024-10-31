@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% set current_page = "profile" %}
+{% block title %}{{ title }}{% endblock %}
+{% block main %}
+    <section class="section is-fullheight has-background-white-ter">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column is-three-quarters">
+                    <div class="box">
+                        <!-- Profile Info -->
+                        <div class="columns is-vcentered">
+                            <div class="column is-one-quarter">
+                                <figure class="image is-128x128 mx-auto">
+                                    <img class="is-rounded"
+                                         src="{{ user.avatar(128) }}"
+                                         alt="{{ user.username }}'s avatar">
+                                </figure>
+                            </div>
+                            <div class="column">
+                                <h1 class="title is-2">{{ user.username }}</h1>
+                                <p>
+                                    <strong>Joined since:</strong> {{ user.created.strftime("%B %d, %Y") if user.created else 'N/A' }}
+                                </p>
+                                <div class="my-5">
+                                    <div class="title is-4 mb-0">Store:</div>
+                                    <div class="title is-3 mt-0">{{ user.store_name if user.store_name else 'N\A' }}</div>
+                                </div>
+                            </div>
+                            <div class="column has-text-right">
+                                <div class="buttons is-flex-direction-column is-align-items-flex-end mt-3">
+                                    <a class="button is-small is-primary"
+                                       href="{{ url_for("main.store_name", username=user.username) }}">Store Name</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Edit Profile Form -->
+            <div class="columns is-centered mt-6">
+                <div class="column is-centered mt-6 is-8-tablet is-6-desktop is-4-widescreen">
+                    <div class="box">
+                        <h2 class="title is-3 has-text-centered">Change Password</h2>
+                        <form method="POST" action="">
+                            {{ form.hidden_tag() }}
+                            <!-- Old Password Field -->
+                            <div class="field">
+                                {{ form.old_password.label(class="label") }}
+                                <div class="field has-addons">
+                                    <div class="control has-icons-left is-expanded">
+                                        {{ form.old_password(class="input password-field", placeholder="Enter your old password", required=true) }}
+                                        <span class="icon is-left">
+                                            <i class="fas fa-lock"></i>
+                                        </span>
+                                    </div>
+                                    <div class="control">
+                                        <a class="button is-info">
+                                            <span class="icon">
+                                                <i class="fas fa-eye"></i>
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                                {% for error in form.old_password.errors %}<p class="help is-danger">{{ error }}</p>{% endfor %}
+                            </div>
+                            <!-- New Password Field -->
+                            <div class="field">
+                                {{ form.new_password.label(class="label") }}
+                                <div class="field has-addons">
+                                    <div class="control has-icons-left is-expanded">
+                                        {{ form.new_password(class="input password-field", placeholder="Enter a new password", required=true) }}
+                                        <span class="icon is-left">
+                                            <i class="fas fa-lock"></i>
+                                        </span>
+                                    </div>
+                                    <div class="control">
+                                        <a class="button is-info">
+                                            <span class="icon">
+                                                <i class="fas fa-eye"></i>
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                                {% for error in form.new_password.errors %}<p class="help is-danger">{{ error }}</p>{% endfor %}
+                            </div>
+                            <!-- Confirm Password Field -->
+                            <div class="field">
+                                {{ form.confirm_password.label(class="label") }}
+                                <div class="field has-addons">
+                                    <div class="control has-icons-left is-expanded">
+                                        {{ form.confirm_password(class="input password-field", placeholder="Confirm new password", required=true) }}
+                                        <span class="icon is-left">
+                                            <i class="fas fa-lock"></i>
+                                        </span>
+                                    </div>
+                                    <div class="control">
+                                        <a class="button is-info">
+                                            <span class="icon">
+                                                <i class="fas fa-eye"></i>
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                                {% for error in form.confirm_password.errors %}<p class="help is-danger">{{ error }}</p>{% endfor %}
+                            </div>
+                            <!-- Submit Button -->
+                            <div class="field is-grouped is-grouped-centered">
+                                <div class="field">
+                                    {{ form.submit(class="button is-primary is-fullwidth") 
+                                    }}
+                                </div>
+                                <div class="control">
+                                    <a class="button is-light"
+                                       href="{{ url_for('main.profile', username=user.username) }}">Cancel</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

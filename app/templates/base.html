@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link href="/static/favicon.ico" rel="icon" />
+        <link rel="stylesheet"
+              href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+        <title>
+            {% block title %}{% endblock %}
+        </title>
+    </head>
+    <body>
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="{{ url_for("main.index") }}">
+                    <svg width="60.8"
+                         height="28.44"
+                         viewBox="0 0 60.8 28.44"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <g id="svgGroup" stroke-linecap="round" fill-rule="evenodd" font-size="9pt" stroke="#000" stroke-width="0.25mm" fill="#000" style="stroke:#000;stroke-width:0.25mm;fill:#000">
+                        <path d="M 14.6 28.44 L 11 28.44 L 11 0.44 L 16.04 0.44 L 28.4 23.72 L 28.4 0.44 L 32 0.44 L 32 28.44 L 27.04 28.44 L 14.6 5.32 L 14.6 28.44 Z M 50.56 28.44 L 46.28 28.44 L 36 1.44 L 39.72 0 L 48.52 24.28 L 57.36 0.12 L 60.8 1.44 L 50.56 28.44 Z M 3.8 28.44 L 0 28.44 L 0 0.44 L 3.8 0.44 L 3.8 28.44 Z" vector-effect="non-scaling-stroke" />
+                        </g>
+                    </svg>
+                </a>
+                <a role="button"
+                   class="navbar-burger"
+                   aria-label="menu"
+                   aria-expanded="false"
+                   data-target="navbarBasicExample">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+            <div id="navbarBasicExample" class="navbar-menu">
+                {% if current_user.is_authenticated %}
+                    <div class="navbar-start">
+                        <a class="navbar-item {% if current_page == 'inventory' %}has-background-info-light has-text-black{% endif %}"
+                           href="{{ url_for("main.inventory") }}">Inventory</a>
+                        <a class="navbar-item {% if current_page == 'analytics' %}has-background-info-light has-text-black{% endif %}"
+                           href="{{ url_for("main.analytics") }}">Analytics</a>
+                        <a class="navbar-item {% if current_page == 'sales' %}has-background-info-light has-text-black{% endif %}"
+                           href="{{ url_for("main.sales") }}">Sales</a>
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-link">More</a>
+                            <div class="navbar-dropdown">
+                                <a class="navbar-item {% if current_page == 'about' %}is-active has-text-black{% endif %}"
+                                   href="{{ url_for("main.about") }}">About</a>
+                                <a class="navbar-item"
+                                   href="https://github.com/TheMasshiro/inventario"
+                                   target="_blank">Github</a>
+                                <hr class="navbar-divider">
+                                <a class="navbar-item"
+                                   href="https://github.com/TheMasshiro/inventario/issues"
+                                   target="_blank">Report an issue</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="navbar-end">
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-link is-arrowless">
+                                {{ current_user.username }}
+                                <figure class="image is-32x32 mr-1 mt-1">
+                                    <img class="is-rounded"
+                                         src="{{ current_user.avatar(32) }}"
+                                         alt="{{ current_user.username }}'s avatar">
+                                </figure>
+                            </a>
+                            <div class="navbar-dropdown">
+                                <a class="navbar-item"
+                                   href="{{ url_for('main.profile', username=current_user.username) }}">Profile</a>
+                                <a class="navbar-item" href="{{ url_for("auth.logout") }}">Log out</a>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="navbar-end">
+                        <div class="navbar-item">
+                            <div class="buttons">
+                                {% if current_page != "login" and current_page != "register" %}
+                                    <a class="button is-light" href="/login">Log in</a>
+                                    <a class="button is-info" href="/register">
+                                        <strong>Register</strong>
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </nav>
+        <main>
+            {% block main %}{% endblock %}
+        </main>
+        <script src="/static/index/index.js"></script>
+        <script src="https://kit.fontawesome.com/18e0e7470f.js"
+                crossorigin="anonymous"></script>
+    </body>
+</html>
