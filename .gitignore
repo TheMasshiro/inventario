@@ -7,11 +7,10 @@ flask_session/
 .venv/
 venv/
 
-db_dev.py
-models_dev.py
 
 *.pyc
 __pycache__/
+.mypy_cache/
 
 instance/
 
