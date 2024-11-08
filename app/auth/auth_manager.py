@@ -5,11 +5,11 @@ from typing import Any
 from flask import flash, redirect, render_template, url_for
 from flask_login import current_user, login_user, logout_user
 
-from app.forms import LoginForm, RegisterForm
-from app.models import User
+from app.user_forms import LoginForm, RegisterForm
+from app.user_models import User
 
 
-class AuthAbstract:
+class AuthInterface:
     @abstractmethod
     def login_user(self) -> Any:
         pass
@@ -23,7 +23,7 @@ class AuthAbstract:
         pass
 
 
-class AuthManager(AuthAbstract):
+class AuthManager(AuthInterface):
     def login_user(self) -> Any:
         """
         Log in user
