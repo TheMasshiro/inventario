@@ -13,24 +13,15 @@ CREATE TABLE IF NOT EXISTS user_inventory (
 );
 
 CREATE TABLE IF NOT EXISTS store_inventory (
-    item_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    product_id INTEGER PRIMARY KEY AUTOINCREMENT,
     inventory_id INTEGER NOT NULL,
-    category_id INTEGER NOT NULL,
-    item_name TEXT NOT NULL,
+    product_name TEXT NOT NULL,
     price DECIMAL(10,2) NOT NULL,
     quantity INTEGER NOT NULL DEFAULT 0,
     last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (inventory_id) REFERENCES user_inventory(inventory_id) ON DELETE CASCADE,
-    FOREIGN KEY (category_id) REFERENCES category(category_id) ON DELETE CASCADE
+    FOREIGN KEY (inventory_id) REFERENCES user_inventory(inventory_id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS category (
-    category_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    category_name TEXT NOT NULL,
-    item_id INTEGER NOT NULL,
-    FOREIGN KEY (item_id) REFERENCES store_inventory(item_id) ON DELETE CASCADE
-);
-
--- Performance?
+-- Performance kuno nvm
 CREATE INDEX idx_user_inventory_user_id ON user_inventory(user_id);
-CREATE INDEX idx_store_inventory_category_id ON store_inventory(category_id);
+CREATE INDEX idx_product_id ON store_inventory(product_id)

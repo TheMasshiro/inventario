@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import BooleanField, PasswordField, StringField, SubmitField
 from wtforms.validators import DataRequired, EqualTo, Length, ValidationError
 
-from app.models import User
+from app.user_models import User
 
 
 class RegisterForm(FlaskForm):
@@ -72,12 +72,12 @@ class LoginForm(FlaskForm):
 
     def validate_username(self, username):
         user = User(username=username.data).get_user()
-        if user is None or not user.check_password(self.password.data):
+        if user and not user.check_password(self.password.data):
             raise ValidationError("Incorrect Username or Password")
 
-    def validate_password(self):
+    def validate_password(self, password):
         user = User(username=self.username.data).get_user()
-        if user is None or not user.check_password(self.password.data):
+        if user and not user.check_password(password.data):
             raise ValidationError("Incorrect Username or Password")
 
 
@@ -90,7 +90,6 @@ class EditProfile(FlaskForm):
         validators=[
             DataRequired(message="This field is required"),
             Length(min=8, message="Password must be at least 8 characters long"),
-            # Add more password complexity validators as needed
         ],
     )
     confirm_password = PasswordField(
@@ -102,16 +101,30 @@ class EditProfile(FlaskForm):
     )
     submit = SubmitField("Save Changes")
 
-    def validate_old_password(self, field):
+    def validate_old_password(self, old_password):
         from flask_login import current_user
 
-        if not current_user.check_password(field.data):
+        if not current_user.check_password(old_password.data):
             raise ValidationError("Incorrect password")
 
     def validate_new_password(self, field):
-        # Add additional password validation if needed
         if field.data == self.old_password.data:
             raise ValidationError("New password must be different from old password")
+
+        if not any(char.isupper() for char in field.data):
+            raise ValidationError("Password must contain at least one uppercase letter")
+
+        if not any(char.islower() for char in field.data):
+            raise ValidationError("Password must contain at least one lowercase letter")
+
+        if not any(char.isdigit() for char in field.data):
+            raise ValidationError("Password must contain at least one number")
+
+        special_chars = '!@#$%^&*(),.?":{}|<>'
+        if not any(char in special_chars for char in field.data):
+            raise ValidationError(
+                "Password must contain at least one special character"
+            )
 
 
 class EditStore(FlaskForm):
@@ -125,5 +138,4 @@ class EditStore(FlaskForm):
             ),
         ],
     )
-
     submit = SubmitField("Save Changes")

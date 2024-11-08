@@ -1,5 +1,4 @@
 import logging
-import os
 import sqlite3
 from datetime import datetime
 from hashlib import md5
@@ -8,37 +7,21 @@ from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import login
-
-
-def get_db_connection():
-    conn = sqlite3.connect("./app/database.db")
-    conn.row_factory = sqlite3.Row
-    return conn
-
-
-def init_db():
-    if os.path.exists("./app/database.db"):
-        return
-
-    with get_db_connection() as conn:
-        with open("./app/schema.sql") as file:
-            conn.executescript(file.read())
-            conn.commit()
+from app.db import get_db_connection
 
 
 @login.user_loader
 def load_user(user_id):
     user = User(user_id=user_id)
-    logging.info(user)  # Debugging line
     return user.get_user("user_id")
 
 
 class User(UserMixin):
     def __init__(
         self,
-        username=None,
-        password_hash=None,
-        store_name=None,
+        username: str | None = None,
+        password_hash: str | None = None,
+        store_name: str | None = None,
         user_id=None,
         created=None,
     ) -> None:
@@ -73,7 +56,7 @@ class User(UserMixin):
         Returns:
             User: A User object if found, None otherwise.
         Raises:
-            ValueError: If an invalid identifier_type is provided.
+            DatabaseError: If an invalid identifier_type is provided.
         """
 
         allowed_identifiers = ["username", "user_id", "email"]
@@ -120,20 +103,25 @@ class User(UserMixin):
         Returns:
             bool: `True` if the user was created successfully, `False` otherwise.
         Raise:
-            UniqueViolation: Ensure the username/email is unique.
+            IntegrityError: Ensure the username/email is unique.
         """
 
-        query = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
+        user_query = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
+        inventory_query = "INSERT OR IGNORE INTO user_inventory (user_id) VALUES (?)"
 
         try:
             with get_db_connection() as conn:
                 cur = conn.cursor()
                 cur.execute(
-                    query,
+                    user_query,
                     (self.username, self.password_hash),
                 )
+
+                self.user_id = cur.lastrowid
+                cur.execute(inventory_query, (self.user_id,))
                 conn.commit()
-            return True
+
+                return True
         except sqlite3.IntegrityError as e:
             logging.error(e)
             return False
@@ -141,21 +129,23 @@ class User(UserMixin):
             logging.error(e)
             return False
 
-    def update_user(self):
-        # TODO: right now
-        """
-        Not Implemented yet
+    def update_user(self, new_password: str | None = None):
+        """Update user password and store name.
+        Returns:
+            bool: `True` if the user was updated successfully, `False` otherwise.
+        Raise:
+            IntegrityError: Ensure the username/email is unique.
         """
         try:
             with get_db_connection() as conn:
                 cur = conn.cursor()
-                if self.store_name is None:
+                if new_password:
                     query = "UPDATE users SET password_hash = ? WHERE username = ?"
                     cur.execute(
                         query,
-                        (self.password_hash, self.username),
+                        (new_password, self.username),
                     )
-                else:
+                elif self.store_name:
                     query = "UPDATE users SET store_name = ? WHERE username = ?"
                     cur.execute(
                         query,
@@ -185,7 +175,7 @@ class User(UserMixin):
         try:
             with get_db_connection() as conn:
                 cur = conn.cursor()
-                cur.execute(query, (self.username))
+                cur.execute(query, (self.username,))
                 conn.commit()
                 if cur.rowcount == 0:
                     return False

@@ -7,6 +7,8 @@ flask_session/
 .venv/
 venv/
 
+app/*.db
+
 
 *.pyc
 __pycache__/

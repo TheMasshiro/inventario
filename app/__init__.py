@@ -21,7 +21,7 @@ def create_app(config_class=Config):
         response.headers["Pragma"] = "no-cache"
         return response
 
-    from app.models import init_db
+    from app.db import init_db
 
     init_db()
 
