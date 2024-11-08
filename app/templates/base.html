@@ -4,6 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link href="/static/favicon.ico" rel="icon" />
+        <link rel="stylesheet" href="/static/style.css">
         <link rel="stylesheet"
               href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
         <title>
@@ -41,8 +42,6 @@
                            href="{{ url_for("main.inventory") }}">Inventory</a>
                         <a class="navbar-item {% if current_page == 'analytics' %}has-background-info-light has-text-black{% endif %}"
                            href="{{ url_for("main.analytics") }}">Analytics</a>
-                        <a class="navbar-item {% if current_page == 'sales' %}has-background-info-light has-text-black{% endif %}"
-                           href="{{ url_for("main.sales") }}">Sales</a>
                         <div class="navbar-item has-dropdown is-hoverable">
                             <a class="navbar-link">More</a>
                             <div class="navbar-dropdown">
