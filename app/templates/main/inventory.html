@@ -4,7 +4,162 @@
 {% block main %}
     <section class="section is-fullheight has-background-white-ter">
         <div class="container">
-            <div class="columns is-centered"></div>
+            <div class="box mb-6">
+                <!--Add search box and filter status here-->
+                <div class="table-container">
+                    <table class="table is-striped is-fullwidth is-size-7">
+                        <thead>
+                            <tr class="has-background-white">
+                                <th class="px-6 py-3 has-text-grey has-text-centered">Item Name</th>
+                                <th class="px-6 py-3 has-text-grey has-text-centered">Price</th>
+                                <th class="px-6 py-3 has-text-grey has-text-centered">Quantity</th>
+                                <th class="px-6 py-3 has-text-grey has-text-centered">Total Price</th>
+                                <th class="px-6 py-3 has-text-grey has-text-centered">Status</th>
+                                <th class="px-6 py-3 has-text-grey has-text-centered">Updated</th>
+                                <th class="px-6 py-3 has-text-grey has-text-centered">Action</th>
+                            </tr>
+                        </thead>
+                        <!--do something-->
+                        <tbody>
+                            <tr class="has-background-white">
+                                <td class="px-6 py-4 has-text-dark has-text-centered is-vcentered">Snacks</td>
+                                <td class="px-6 py-4 has-text-dark has-text-centered is-vcentered">10</td>
+                                <td class="px-6 py-4 has-text-dark has-text-centered is-vcentered">10</td>
+                                <td class="px-6 py-4 has-text-dark has-text-centered is-vcentered">100</td>
+                                <td class="px-6 py-4 has-text-centered is-vcentered">
+                                    <span class="tag is-warning has-text-white">Low Stock</span>
+                                </td>
+                                <td class="px-6 py-4 has-text-dark has-text-centered is-vcentered">09/04/2021</td>
+                                <td class="px-6 py-4 has-text-centered is-vcentered">
+                                    <button class="button is-ghost has-text-info p-1 mr-2 js-modal-trigger"
+                                            title="Edit"
+                                            data-target="edit-item-modal">
+                                        <span class="icon is-medium">
+                                            <i class="fas fa-edit fa-lg"></i>
+                                        </span>
+                                    </button>
+                                    <button class="button is-ghost has-text-danger p-1 js-modal-trigger"
+                                            title="Delete"
+                                            data-target="delete-item-modal">
+                                        <span class="icon is-medium">
+                                            <i class="fas fa-trash fa-lg"></i>
+                                        </span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="columns">
+            <!--Pagination-->
+            <div class="column is-flex">
+                <nav class="pagination is-small" role="navigation" aria-label="pagination">
+                    <ul class="pagination-list">
+                        <li>
+                            <a href="#"
+                               class="pagination-link has-background-white"
+                               aria-label="Goto page 1">1</a>
+                        </li>
+                        <li>
+                            <span class="pagination-ellipsis">&hellip;</span>
+                        </li>
+                        <li>
+                            <a href="#"
+                               class="pagination-link has-background-white"
+                               aria-label="Goto page 45">45</a>
+                        </li>
+                        <li>
+                            <a class="pagination-link is-current"
+                               aria-label="Page 46"
+                               aria-current="page">46</a>
+                        </li>
+                        <li>
+                            <a href="#"
+                               class="pagination-link has-background-white"
+                               aria-label="Goto page 47">47</a>
+                        </li>
+                        <li>
+                            <span class="pagination-ellipsis">&hellip;</span>
+                        </li>
+                        <li>
+                            <a href="#"
+                               class="pagination-link has-background-white"
+                               aria-label="Goto page 86">86</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <!-- Add button column -->
+            <div class="column is-flex is-justify-content-flex-end">
+                <div class="mx-3">
+                    <button class="button is-primary is-rounded js-modal-trigger"
+                            data-target="add-item-modal">
+                        <span>Add</span>
+                        <span class="icon is-small">
+                            <i class="fas fa-plus"></i>
+                        </span>
+                    </button>
+                </div>
+            </div>
         </div>
     </section>
+    <!--edit modal here-->
+    <div class="modal" id="edit-item-modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Edit [Product]</p>
+                <button class="delete" aria-label="close"></button>
+            </header>
+            <section class="modal-card-body">
+                <!-- Content ... -->
+            </section>
+            <footer class="modal-card-foot is-justify-content-center">
+                <div class="buttons">
+                    <button class="button is-success">Save Changes</button>
+                    <button class="button">Cancel</button>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <!--delete modal-->
+    <div class="modal" id="delete-item-modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Remove [Product]?</p>
+                <button class="delete" aria-label="close"></button>
+            </header>
+            <section class="modal-card-body">
+                <!-- Content ... -->
+            </section>
+            <footer class="modal-card-foot is-justify-content-center">
+                <div class="buttons">
+                    <button class="button is-danger">Remove</button>
+                    <button class="button">Cancel</button>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <!--Add Item Modal-->
+    <div class="modal" id="add-item-modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Add New Product</p>
+                <button class="delete" aria-label="Close"></button>
+            </header>
+            <section class="modal-card-body">
+                <!-- Form fields or content here... -->
+            </section>
+            <footer class="modal-card-foot is-justify-content-center">
+                <div class="buttons">
+                    <button class="button is-success">Add Product</button>
+                    <button class="button">Cancel</button>
+                </div>
+            </footer>
+        </div>
+    </div>
 {% endblock %}

@@ -23,13 +23,21 @@
                                 </p>
                                 <div class="my-5">
                                     <div class="title is-4 mb-0">Store:</div>
-                                    <div class="title is-3 mt-0">{{ user.store_name if user.store_name else 'N\A' }}</div>
+                                    <div class="title is-3 mt-0">
+                                        {{ user.store_name if user.store_name else 'N/A' }}
+                                        <a href="{{ url_for('main.store_name', username=user.username) }}"
+                                           class="icon is-small is-clickable has-text-grey ml-1"
+                                           title="Edit Store Name"
+                                           style="vertical-align: super">
+                                            <i class="fas fa-edit is-size-6"></i>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                             <div class="column has-text-right">
                                 <div class="buttons is-flex-direction-column is-align-items-flex-end mt-3">
-                                    <a class="button is-small is-primary"
-                                       href="{{ url_for("main.store_name", username=user.username) }}">Store Name</a>
+                                    <a class="button is-small is-danger is-light is-rounded mb-2"
+                                       href="{{ url_for('main.profile', username=user.username) }}">Back</a>
                                 </div>
                             </div>
                         </div>
