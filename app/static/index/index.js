@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initPasswordToggle();
   initNavbarBurger();
   initModals();
+  initNotification();
+  getItemInventory();
 });
 
 function initTermsAndConditions() {
@@ -58,7 +60,6 @@ function initModals() {
   (document.querySelectorAll(".js-modal-trigger") || []).forEach(($trigger) => {
     const modal = $trigger.dataset.target;
     const $target = document.getElementById(modal);
-
     $trigger.addEventListener("click", () => {
       openModal($target);
     });
@@ -66,11 +67,10 @@ function initModals() {
 
   (
     document.querySelectorAll(
-      ".modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button",
+      ".modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button[type='button']",
     ) || []
   ).forEach(($close) => {
     const $target = $close.closest(".modal");
-
     $close.addEventListener("click", () => {
       closeModal($target);
     });
@@ -84,13 +84,35 @@ function initModals() {
 }
 
 function openModal($el) {
-  $el.classList.add("is-active");
+  if (typeof $el === "string") {
+    $el = document.getElementById($el);
+  }
+  if ($el) {
+    $el.classList.add("is-active");
+  }
 }
 
 function closeModal($el) {
-  $el.classList.remove("is-active");
+  if (typeof $el === "string") {
+    $el = document.getElementById($el);
+  }
+  if ($el) {
+    $el.classList.remove("is-active");
+  }
 }
 
 function closeAllModals() {
   (document.querySelectorAll(".modal") || []).forEach(closeModal);
+}
+
+function initNotification() {
+  (document.querySelectorAll(".notification .delete") || []).forEach(
+    ($delete) => {
+      const $notification = $delete.parentNode;
+
+      $delete.addEventListener("click", () => {
+        $notification.parentNode.removeChild($notification);
+      });
+    },
+  );
 }
