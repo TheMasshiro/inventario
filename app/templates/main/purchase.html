@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% set current_page = "purchase" %}
+{% block title %}Inventario - {{ title }}{% endblock %}
+{% block main %}
+    <section class="section is-fullheight has-background-white-ter">
+        <div class="container">
+            <div class="box mb-6">
+                <!--Add search box and filter status here-->
+                <div class="table-container">
+                    <table class="table is-striped is-fullwidth is-size-7">
+                        <thead>
+                            <tr class="has-background-white">
+                                <th class="px-6 py-3 has-text-grey has-text-centered">Item Name</th>
+                                <th class="px-6 py-3 has-text-grey has-text-centered">Price</th>
+                                <th class="px-6 py-3 has-text-grey has-text-centered">Quantity</th>
+                                <th class="px-6 py-3 has-text-grey has-text-centered">Status</th>
+                                <th class="px-6 py-3 has-text-grey has-text-centered">Action</th>
+                            </tr>
+                        </thead>
+                        <!--do something-->
+                        <tbody>
+                            <tr class="has-background-white">
+                                <td class="px-6 py-4 has-text-dark has-text-centered is-vcentered">Snacks</td>
+                                <td class="px-6 py-4 has-text-dark has-text-centered is-vcentered">10</td>
+                                <td class="px-6 py-4 has-text-dark has-text-centered is-vcentered">10</td>
+                                <td class="px-6 py-4 has-text-centered is-vcentered">
+                                    <span class="tag is-warning has-text-white">Low Stock</span>
+                                </td>
+                                <td class="px-6 py-4 has-text-centered is-vcentered">
+                                    <button class="button is-ghost has-text-primary p-1" title="Buy">
+                                        <span class="icon is-medium">
+                                            <i class="fas fa-cart-shopping fa-lg"></i>
+                                        </span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="columns">
+            <!--Pagination-->
+            <div class="column is-flex is-justify-content-center">
+                <nav class="pagination is-small" role="navigation" aria-label="pagination">
+                    <ul class="pagination-list">
+                        <li>
+                            <a href="#"
+                               class="pagination-link has-background-white"
+                               aria-label="Goto page 1">1</a>
+                        </li>
+                        <li>
+                            <span class="pagination-ellipsis">&hellip;</span>
+                        </li>
+                        <li>
+                            <a href="#"
+                               class="pagination-link has-background-white"
+                               aria-label="Goto page 45">45</a>
+                        </li>
+                        <li>
+                            <a class="pagination-link is-current"
+                               aria-label="Page 46"
+                               aria-current="page">46</a>
+                        </li>
+                        <li>
+                            <a href="#"
+                               class="pagination-link has-background-white"
+                               aria-label="Goto page 47">47</a>
+                        </li>
+                        <li>
+                            <span class="pagination-ellipsis">&hellip;</span>
+                        </li>
+                        <li>
+                            <a href="#"
+                               class="pagination-link has-background-white"
+                               aria-label="Goto page 86">86</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </section>
+{% endblock %}
