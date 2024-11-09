@@ -13,16 +13,38 @@ def index():
     return redirect(url_for("main.inventory"))
 
 
+@main.route("/purchase", methods=["GET", "POST"])
+@login_required
+def purchase():
+    return InventoryManager().purchase()
+
+
 @main.route("/inventory", methods=["GET", "POST"])
 @login_required
 def inventory():
     return InventoryManager().inventory()
 
 
+@main.route("/inventory/edit/<int:product_id>", methods=["POST"])
+def edit_product(product_id):
+    return InventoryManager().edit_product(product_id)
+
+
+@main.route("/inventory/delete/<int:product_id>", methods=["POST"])
+def remove_product(product_id):
+    return InventoryManager().remove_product(product_id)
+
+
 @main.route("/analytics", methods=["GET", "POST"])
 @login_required
 def analytics():
     return InventoryManager().analytics()
+
+
+@main.route("/suppliers", methods=["GET", "POST"])
+@login_required
+def suppliers():
+    return InventoryManager().suppliers()
 
 
 @main.route("/about", methods=["GET", "POST"])
