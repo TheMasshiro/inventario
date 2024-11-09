@@ -38,10 +38,14 @@
             <div id="navbarBasicExample" class="navbar-menu">
                 {% if current_user.is_authenticated %}
                     <div class="navbar-start">
+                        <a class="navbar-item {% if current_page == 'purchase' %}has-background-info-light has-text-black{% endif %}"
+                           href="{{ url_for("main.purchase") }}">Purchase</a>
                         <a class="navbar-item {% if current_page == 'inventory' %}has-background-info-light has-text-black{% endif %}"
                            href="{{ url_for("main.inventory") }}">Inventory</a>
                         <a class="navbar-item {% if current_page == 'analytics' %}has-background-info-light has-text-black{% endif %}"
                            href="{{ url_for("main.analytics") }}">Analytics</a>
+                        <a class="navbar-item {% if current_page == 'suppliers' %}has-background-info-light has-text-black{% endif %}"
+                           href="{{ url_for("main.suppliers") }}">Suppliers</a>
                         <div class="navbar-item has-dropdown is-hoverable">
                             <a class="navbar-link">More</a>
                             <div class="navbar-dropdown">
@@ -94,6 +98,7 @@
             {% block main %}{% endblock %}
         </main>
         <script src="/static/index/index.js"></script>
+        <script src="/static/index/items.js"></script>
         <script src="https://kit.fontawesome.com/18e0e7470f.js"
                 crossorigin="anonymous"></script>
     </body>
