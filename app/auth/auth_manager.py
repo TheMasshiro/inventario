@@ -5,8 +5,8 @@ from typing import Any
 from flask import flash, redirect, render_template, url_for
 from flask_login import current_user, login_user, logout_user
 
-from app.user_forms import LoginForm, RegisterForm
-from app.user_models import User
+from app.forms.user_forms import LoginForm, RegisterForm
+from app.models.user_models import User
 
 
 class AuthInterface:
