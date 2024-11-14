@@ -1,30 +1,45 @@
 function getItemInventory() {
-  const modalButtons = document.querySelectorAll(".js-modal-trigger");
+  const modalButtons = document.querySelectorAll(".inventory-button");
+
   modalButtons.forEach((button) => {
     button.addEventListener("click", function () {
       const productId = this.getAttribute("data-product-id");
       const productName = this.getAttribute("data-product-name");
       const productPrice = this.getAttribute("data-product-price");
-      const productQuantity = this.getAttribute("data-product-quantity");
+      const productStock = this.getAttribute("data-product-stock");
       const productSupplier = this.getAttribute("data-product-supplier");
 
       const editTitle = document.querySelector("#edit-title");
       const deleteTitle = document.querySelector("#delete-title");
 
-      if (this.title === "Edit") {
+      if (this.title === "Inventory Edit") {
         editTitle.textContent = `Editing ${productName}`;
+        const editForm = document.getElementById("editInventoryForm");
+        if (!editForm) {
+          return;
+        }
 
-        const editForm = document.getElementById("editForm");
         editForm.action = `/inventory/edit/${productId}`;
 
-        document.getElementById("product_name").value = productName;
-        document.getElementById("price").value = productPrice;
-        document.getElementById("quantity").value = productQuantity;
-        document.getElementById("supplier_name").value = productSupplier;
-      } else if (this.title == "Delete") {
-        deleteTitle.textContent = `Remove ${productName}?`;
+        const fields = {
+          product_name: productName,
+          price: productPrice,
+          stock: productStock,
+          supplier_name: productSupplier,
+        };
 
-        const deleteForm = document.getElementById("deleteForm");
+        for (const [id, value] of Object.entries(fields)) {
+          const field = document.getElementById(id);
+          if (field) {
+            field.value = value;
+          }
+        }
+      } else if (this.title === "Inventory Delete") {
+        deleteTitle.textContent = `Remove ${productName}?`;
+        const deleteForm = document.getElementById("deleteInventoryForm");
+        if (!deleteForm) {
+          return;
+        }
         deleteForm.action = `/inventory/delete/${productId}`;
       }
     });
