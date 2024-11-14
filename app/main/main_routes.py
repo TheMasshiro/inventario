@@ -4,6 +4,7 @@ from flask_login import current_user, login_required
 from app.main import main_bp as main
 from app.main.inventory import InventoryManager
 from app.main.profile import ProfileManager
+from app.main.suppliers import SuppliersManager
 
 
 @main.route("/")
@@ -44,7 +45,17 @@ def analytics():
 @main.route("/suppliers", methods=["GET", "POST"])
 @login_required
 def suppliers():
-    return InventoryManager().suppliers()
+    return SuppliersManager().suppliers()
+
+
+@main.route("/suppliers/edit/<int:supplier_id>", methods=["POST"])
+def edit_supplier(supplier_id):
+    return SuppliersManager().edit_suppliers(supplier_id)
+
+
+@main.route("/suppliers/delete/<int:supplier_id>", methods=["POST"])
+def remove_supplier(supplier_id):
+    return SuppliersManager().remove_suppliers(supplier_id)
 
 
 @main.route("/about", methods=["GET", "POST"])
