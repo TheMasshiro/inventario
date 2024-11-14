@@ -4,9 +4,9 @@ from typing import Any
 
 from flask import flash, redirect, render_template, request, url_for
 
-from app.helpers import format_currency
-from app.inventory_forms import ProductForm
-from app.inventory_models import Inventory
+from app.forms.inventory_forms import ProductForm
+from app.helpers import format_currency, paginate_inventory
+from app.models.inventory_models import Inventory
 
 
 class InventoryInterface(ABC):
@@ -31,10 +31,6 @@ class InventoryInterface(ABC):
         pass
 
     @abstractmethod
-    def suppliers(self) -> Any:
-        pass
-
-    @abstractmethod
     def about(self) -> Any:
         pass
 
@@ -48,55 +44,54 @@ class InventoryManager(InventoryInterface):
     def inventory(self) -> Any:
         user_inventory = Inventory()
         page = request.args.get("page", 1, type=int)
-        ITEMS_PER_PAGE = 10
+        form = ProductForm()
 
-        add_form = ProductForm()
+        pagination = paginate_inventory(page, user_inventory)
+        companies = []
+        for company in user_inventory.get_supplier_companies():
+            companies.append(company["company_name"])
+
+        form.supplier_name.choices = companies
 
         if request.method == "GET":
-            total_items = user_inventory.get_total_items()
-            total_pages = max(1, (total_items + ITEMS_PER_PAGE - 1) // ITEMS_PER_PAGE)
-            page = max(1, min(page, total_pages))
-
-            if total_pages <= 5:
-                start_page = 1
-                end_page = total_pages
-            else:
-                start_page = max(1, page - 2)
-                end_page = min(total_pages, page + 2)
-
-                if start_page == 1:
-                    end_page = 5
-                elif end_page == total_pages:
-                    start_page = total_pages - 4
-
-            offset = (page - 1) * ITEMS_PER_PAGE
-            products = user_inventory.get_all_paginated_items(offset, ITEMS_PER_PAGE)
-
             return render_template(
                 "main/inventory.html",
                 title="Inventory",
-                products=products,
+                products=pagination[0],
                 format_currency=format_currency,
                 page=page,
-                total_pages=total_pages,
-                start_page=start_page,
-                end_page=end_page,
-                form=add_form,
+                start_page=pagination[1],
+                end_page=pagination[2],
+                total_pages=pagination[3],
+                form=form,
             )
 
-        if add_form.validate_on_submit():
+        if form.validate_on_submit():
             current_date = date.today().strftime("%d-%m-%Y")
 
             add_item = user_inventory.add_item(
-                add_form.product_name.data,
-                add_form.price.data,
-                add_form.quantity.data,
-                add_form.supplier_name.data,
+                form.product_name.data,
+                form.price.data,
+                form.stock.data,
                 current_date,
+                form.supplier_name.data,
             )
 
             if add_item:
-                flash(f"{add_form.product_name.data} Added to Inventory", "success")
+                flash(
+                    f"{form.product_name.data} added to inventory",
+                    "success-inventory",
+                )
+            else:
+                flash(
+                    f"Failed to add {form.product_name.data} to the inventory. {form.errors}.",
+                    "danger-inventory",
+                )
+        else:
+            flash(
+                f"Failed to add {form.product_name.data} to the inventory. {form.errors}.",
+                "danger-inventory",
+            )
 
         return redirect(url_for("main.inventory"))
 
@@ -108,6 +103,12 @@ class InventoryManager(InventoryInterface):
         if product is None:
             return redirect(url_for("main.inventory"))
 
+        companies = []
+        for company in user_inventory.get_supplier_companies():
+            companies.append(company["company_name"])
+
+        form.supplier_name.choices = companies
+
         if form.validate_on_submit():
             current_date = date.today().strftime("%d-%m-%Y")
 
@@ -115,13 +116,26 @@ class InventoryManager(InventoryInterface):
                 product_id,
                 form.product_name.data,
                 form.price.data,
-                form.quantity.data,
-                form.supplier_name.data,
+                form.stock.data,
                 current_date,
+                form.supplier_name.data,
             )
 
             if edit_item:
-                flash(f"{form.product_name.data} updated successfully", "success")
+                flash(
+                    f"{product[1]} updated to {form.product_name.data}",
+                    "success-inventory",
+                )
+            else:
+                flash(
+                    f"Failed to update {form.product_name.data}. {form.errors}.",
+                    "danger-inventory",
+                )
+        else:
+            flash(
+                f"Failed to update {form.product_name.data}. {form.errors}.",
+                "danger-inventory",
+            )
 
         return redirect(url_for("main.inventory"))
 
@@ -133,7 +147,9 @@ class InventoryManager(InventoryInterface):
             return redirect(url_for("main.inventory"))
 
         if user_inventory.remove_item(product_id):
-            flash("Product removed successfully", "success")
+            flash(f"{product[1]} removed from inventory", "success-inventory")
+        else:
+            flash(f"Failed to remove {product[1]} from inventory", "danger-inventory")
 
         return redirect(url_for("main.inventory"))
 
@@ -141,11 +157,6 @@ class InventoryManager(InventoryInterface):
         if request.method == "GET":
             return render_template("main/analytics.html", title="Analytics")
         return render_template("main/analytics.html", title="Analytics")
-
-    def suppliers(self) -> Any:
-        if request.method == "GET":
-            return render_template("main/suppliers.html", title="Suppliers")
-        return render_template("main/suppliers.html", title="Suppliers")
 
     def about(self) -> Any:
         if request.method == "GET":
