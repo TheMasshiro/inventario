@@ -4,8 +4,8 @@ from typing import Any
 from flask import abort, flash, redirect, render_template, url_for
 from flask_login import current_user
 
-from app.user_forms import EditProfile, EditStore
-from app.user_models import User
+from app.forms.user_forms import EditProfile, EditStore
+from app.models.user_models import User
 
 
 class ProfileInterface(ABC):
