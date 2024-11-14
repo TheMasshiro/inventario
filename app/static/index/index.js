@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initModals();
   initNotification();
   getItemInventory();
+  getSupplierInventory();
 });
 
 function initTermsAndConditions() {
