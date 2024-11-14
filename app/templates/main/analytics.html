@@ -4,7 +4,80 @@
 {% block main %}
     <section class="section is-fullheight has-background-white-ter">
         <div class="container">
-            <div class="columns is-centered"></div>
+            <div class="columns is-centered">
+                <!-- Best Selling Products Box -->
+                <div class="column is-5">
+                    <div class="box">
+                        <h4 class="title is-4 has-text-primary">
+                            <span class="icon-text">
+                                <span class="icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </span>
+                                <span>Best Selling Products</span>
+                            </span>
+                        </h4>
+                        <div class="content">
+                            <table class="table is-fullwidth">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Sold</th>
+                                        <th>Stock</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for product in best_selling %}
+                                        <tr>
+                                            <td>{{ product.product_name }}</td>
+                                            <td>{{ product.units_sold }}</td>
+                                            <td>{{ product.quantity }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- Low/Out of Stock Products Box -->
+                <div class="column is-5">
+                    <div class="box">
+                        <h4 class="title is-4 has-text-danger">
+                            <span class="icon-text">
+                                <span class="icon">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </span>
+                                <span>Low/Out of Stock</span>
+                            </span>
+                        </h4>
+                        <div class="content">
+                            <table class="table is-fullwidth">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Status</th>
+                                        <th>Stock</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for product in low_stock %}
+                                        <tr>
+                                            <td>{{ product.name }}</td>
+                                            <td>
+                                                {% if product.stock == 0 %}
+                                                    <span class="tag is-danger">Out of Stock</span>
+                                                {% else %}
+                                                    <span class="tag is-warning">Low Stock</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ product.stock }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 {% endblock %}
