@@ -4,10 +4,10 @@ def format_currency(value):
 
 
 def error_messages(form):
-    error_messages = "; ".join(
-        error for errors in form.errors.values() for error in errors
-    )
-    return error_messages
+    for _, errors in form.errors.items():
+        if errors:
+            return errors[0]
+    return ""
 
 
 def paginate_suppliers(page, user_suppliers):
