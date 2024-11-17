@@ -43,12 +43,65 @@ class SuppliersManager(SuppliersInterface):
             )
 
         if form.validate_on_submit():
+            company_name = form.company_name.data
+            supplier_name = form.supplier_name.data
+            email = form.email.data
+            phone = form.phone.data
+            status = form.status.data
+
+            existing_supplier_name = user_supplier.get_supplier_by_name(
+                company_name, supplier_name
+            )
+            if supplier_name is None:
+                flash(
+                    "Supplier name is required",
+                    "danger-supplier",
+                )
+                return redirect(url_for("main.suppliers"))
+
+            if (
+                existing_supplier_name
+                and existing_supplier_name[2].strip().lower()
+                == supplier_name.strip().lower()
+            ):
+                flash(
+                    f"{form.supplier_name.data} from {form.company_name.data} already exists in Suppliers",
+                    "danger-supplier",
+                )
+                return redirect(url_for("main.suppliers"))
+
+            existing_supplier_email = user_supplier.get_supplier_by_email(
+                company_name, email
+            )
+            if email is None:
+                flash(
+                    "Email is required",
+                    "danger-supplier",
+                )
+                return redirect(url_for("main.suppliers"))
+
+            if (
+                existing_supplier_email
+                and existing_supplier_email[3].strip().lower() == email.strip().lower()
+            ):
+                flash(
+                    f"{form.email.data} already exists in Suppliers",
+                    "danger-supplier",
+                )
+                return redirect(url_for("main.suppliers"))
+
+            existing_supplier_phone = user_supplier.get_supplier_by_phone(
+                company_name, phone
+            )
+            if existing_supplier_phone:
+                flash(
+                    f"{form.phone.data} already exists in Suppliers",
+                    "danger-supplier",
+                )
+                return redirect(url_for("main.suppliers"))
+
             add_supplier = user_supplier.add_supplier(
-                form.company_name.data,
-                form.supplier_name.data,
-                form.email.data,
-                form.phone.data,
-                form.status.data,
+                company_name, supplier_name, email, phone, status
             )
 
             if add_supplier:
@@ -72,24 +125,60 @@ class SuppliersManager(SuppliersInterface):
     def edit_suppliers(self, supplier_id) -> Any:
         user_supplier = Suppliers()
         form = SupplierForm()
-        supplier = user_supplier.get_supplier(supplier_id)
 
+        supplier = user_supplier.get_supplier(supplier_id)
         if supplier is None:
             return redirect(url_for("main.suppliers"))
 
         if form.validate_on_submit():
+            new_company_name = form.company_name.data
+            new_supplier_name = form.supplier_name.data
+            new_email = form.email.data
+            new_phone = form.phone.data
+            new_status = form.status.data
+
+            existing_supplier = user_supplier.get_supplier_by_name(
+                new_company_name, new_supplier_name
+            )
+            if existing_supplier and existing_supplier[0] != supplier_id:
+                flash(
+                    f"{form.supplier_name.data} from {form.company_name.data} already exists in Suppliers",
+                    "danger-supplier",
+                )
+                return redirect(url_for("main.suppliers"))
+
+            existing_supplier_email = user_supplier.get_supplier_by_email(
+                new_company_name, new_email
+            )
+            if existing_supplier_email and existing_supplier_email[0] != supplier_id:
+                flash(
+                    f"{form.email.data} already exists in Suppliers",
+                    "danger-supplier",
+                )
+                return redirect(url_for("main.suppliers"))
+
+            existing_supplier_phone = user_supplier.get_supplier_by_phone(
+                new_company_name, new_phone
+            )
+            if existing_supplier_phone and existing_supplier_phone[0] != supplier_id:
+                flash(
+                    f"{form.phone.data} already exists in Suppliers",
+                    "danger-supplier",
+                )
+                return redirect(url_for("main.suppliers"))
+
             edit_supplier = user_supplier.edit_supplier(
                 supplier_id,
-                form.company_name.data,
-                form.supplier_name.data,
-                form.email.data,
-                form.phone.data,
-                form.status.data,
+                new_company_name,
+                new_supplier_name,
+                new_email,
+                new_phone,
+                new_status,
             )
 
             if edit_supplier:
                 flash(
-                    f"{form.supplier_name.data} from {form.company_name.data} edited.",
+                    f"Successfully edited {form.company_name.data}",
                     "success-supplier",
                 )
             else:
@@ -103,11 +192,13 @@ class SuppliersManager(SuppliersInterface):
                 "danger-supplier",
             )
 
-            return redirect(url_for("main.suppliers"))
+        return redirect(url_for("main.suppliers"))
 
     def remove_suppliers(self, supplier_id) -> Any:
         user_supplier = Suppliers()
         supplier = user_supplier.get_supplier(supplier_id)
+
+        print(supplier_id)
 
         if supplier is None:
             return redirect(url_for("main.suppliers"))
