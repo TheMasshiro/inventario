@@ -15,10 +15,10 @@ CREATE TABLE IF NOT EXISTS user_inventory (
 CREATE TABLE IF NOT EXISTS suppliers(
     supplier_id INTEGER PRIMARY KEY AUTOINCREMENT,
     inventory_id INTEGER,
-    company_name TEXT NOT NULL UNIQUE,
-    supplier_name TEXT NOT NULL UNIQUE,
-    email TEXT NOT NULL UNIQUE,
-    phone TEXT NOT NULL UNIQUE,
+    company_name TEXT NOT NULL,
+    supplier_name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    phone TEXT NOT NULL,
     status TEXT NOT NULL,
     FOREIGN KEY (inventory_id) REFERENCES user_inventory(inventory_id) ON DELETE CASCADE
 );
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS products (
     product_id INTEGER PRIMARY KEY AUTOINCREMENT,
     supplier_id INTEGER NOT NULL,
     inventory_id INTEGER NOT NULL,
-    product_name TEXT NOT NULL UNIQUE,
+    product_name TEXT NOT NULL,
     supplier_name TEXT NOT NULL,
     price DECIMAL(10,2) NOT NULL,
     stock INTEGER NOT NULL DEFAULT 0,
