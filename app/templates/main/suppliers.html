@@ -151,11 +151,18 @@
 <div class="modal" id="delete-supplier-modal">
     <div class="modal-background"></div>
     <div class="modal-card">
-        <header class="modal-card-head">
-            <p class="modal-card-title has-text-centered" id="delete-title">Remove Supplier</p>
-            <button class="delete" aria-label="close"></button>
+        <header class="modal-card-head has-background-danger">
+            <p class="modal-card-title">
+                <span class="icon-text">
+                    <span class="icon">
+                        <i class="fas fa-box"></i>
+                    </span>
+                    <span id="delete-title">Remove Supplier</span>
+                </span>
+            </p>
+            <button class="delete" aria-label="Close"></button>
         </header>
-        <form id="deleteInventoryForm" method="POST">
+        <form id="deleteSupplierForm" method="POST">
             <footer class="modal-card-foot is-justify-content-center">
                 <div class="buttons">
                     {{ form.remove_submit(class="button is-danger") }}
@@ -171,13 +178,13 @@
 <div class="modal" id="edit-supplier-modal">
     <div class="modal-background"></div>
     <div class="modal-card">
-        <header class="modal-card-head has-background-primary">
-            <p class="modal-card-title has-text-white" id="edit-title">
+        <header class="modal-card-head has-background-info">
+            <p class="modal-card-title">
                 <span class="icon-text">
                     <span class="icon">
                         <i class="fas fa-box"></i>
                     </span>
-                    <span>Edit Supplier</span>
+                    <span id="edit-title">Edit Supplier</span>
                 </span>
             </p>
             <button class="delete" aria-label="Close"></button>
@@ -188,9 +195,9 @@
                 <div class="box has-background-light p-5">
                     <!-- Company Name -->
                     <div class="field mb-4">
-                        <label class="label is-small has-text-primary">{{ form.company_name.label }}</label>
+                        <label class="label is-small">{{ form.company_name.label }}</label>
                         <div class="control has-icons-left">
-                            {{ form.company_name(class="input is-primary", placeholder="Enter company name", id="company_name") }}
+                            {{ form.company_name(class="input is-info", placeholder="Enter company name", id="company_name") }}
                             <span class="icon is-small is-left">
                                 <i class="fas fa-building"></i>
                             </span>
@@ -203,9 +210,9 @@
                     <div class="columns mb-4">
                         <div class="column">
                             <div class="field">
-                                <label class="label is-small has-text-primary">{{ form.supplier_name.label }}</label>
+                                <label class="label is-small">{{ form.supplier_name.label }}</label>
                                 <div class="control has-icons-left">
-                                    {{ form.supplier_name(class="input is-primary", placeholder="Enter contact person name", id="supplier_name") }}
+                                    {{ form.supplier_name(class="input is-info", placeholder="Enter contact person name", id="supplier_name") }}
                                     <span class="icon is-small is-left">
                                         <i class="fas fa-user"></i>
                                     </span>
@@ -217,9 +224,9 @@
                         </div>
                         <div class="column">
                             <div class="field">
-                                <label class="label is-small has-text-primary">{{ form.email.label }}</label>
+                                <label class="label is-small">{{ form.email.label }}</label>
                                 <div class="control has-icons-left">
-                                    {{ form.email(class="input is-primary", placeholder="Enter email address", type="email", id="email") }}
+                                    {{ form.email(class="input is-info", placeholder="Enter email address", type="email", id="email") }}
                                     <span class="icon is-small is-left">
                                         <i class="fas fa-envelope"></i>
                                     </span>
@@ -234,9 +241,9 @@
                     <div class="columns mb-4">
                         <div class="column">
                             <div class="field">
-                                <label class="label is-small has-text-primary">{{ form.phone.label }}</label>
+                                <label class="label is-small">{{ form.phone.label }}</label>
                                 <div class="control has-icons-left">
-                                    {{ form.phone(class="input is-primary", placeholder="Enter phone number", type="number", maxlength="11", id="phone") }}
+                                    {{ form.phone(class="input is-info", placeholder="Enter phone number", type="number", maxlength="11", id="phone") }}
                                     <span class="icon is-small is-left">
                                         <i class="fas fa-phone"></i>
                                     </span>
@@ -248,10 +255,10 @@
                         </div>
                         <div class="column">
                             <div class="field">
-                                <label class="label is-small has-text-primary">{{ form.status.label }}</label>
+                                <label class="label is-small">{{ form.status.label }}</label>
                                 <div class="control">
-                                    <div class="select is-primary is-fullwidth">
-                                        {{ form.status(class="input is-primary", placeholder="Supplier Status", id="status") }}
+                                    <div class="select is-info is-fullwidth">
+                                        {{ form.status(class="input is-info", placeholder="Supplier Status", id="status") }}
                                     </div>
                                 </div>
                                 {% if form.status.errors %}
@@ -272,7 +279,7 @@
                         </span>
                         <span>Cancel</span>
                     </button>
-                    {{ form.add_submit(class="button is-primary is-small") }}
+                    {{ form.edit_submit(class="button is-info is-small") }}
                 </div>
             </footer>
         </form>
@@ -283,7 +290,7 @@
     <div class="modal-background"></div>
     <div class="modal-card">
         <header class="modal-card-head has-background-primary">
-            <p class="modal-card-title has-text-white">
+            <p class="modal-card-title">
                 <span class="icon-text">
                     <span class="icon">
                         <i class="fas fa-truck"></i>
@@ -301,7 +308,7 @@
                 <div class="box has-background-light p-5">
                     <!-- Company Name -->
                     <div class="field mb-4">
-                        <label class="label is-small has-text-primary">{{ form.company_name.label }}</label>
+                        <label class="label is-small">{{ form.company_name.label }}</label>
                         <div class="control has-icons-left">
                             {{ form.company_name(class="input is-primary", placeholder="Enter company name") }}
                             <span class="icon is-small is-left">
@@ -316,7 +323,7 @@
                     <div class="columns mb-4">
                         <div class="column">
                             <div class="field">
-                                <label class="label is-small has-text-primary">{{ form.supplier_name.label }}</label>
+                                <label class="label is-small">{{ form.supplier_name.label }}</label>
                                 <div class="control has-icons-left">
                                     {{ form.supplier_name(class="input is-primary", placeholder="Enter contact person name") }}
                                     <span class="icon is-small is-left">
@@ -330,7 +337,7 @@
                         </div>
                         <div class="column">
                             <div class="field">
-                                <label class="label is-small has-text-primary">{{ form.email.label }}</label>
+                                <label class="label is-small">{{ form.email.label }}</label>
                                 <div class="control has-icons-left">
                                     {{ form.email(class="input is-primary", placeholder="Enter email address", type="email") }}
                                     <span class="icon is-small is-left">
@@ -347,7 +354,7 @@
                     <div class="columns mb-4">
                         <div class="column">
                             <div class="field">
-                                <label class="label is-small has-text-primary">{{ form.phone.label }}</label>
+                                <label class="label is-small">{{ form.phone.label }}</label>
                                 <div class="control has-icons-left">
                                     {{ form.phone(class="input is-primary", placeholder="Enter phone number", type="number", maxlength="11") }}
                                     <span class="icon is-small is-left">
@@ -361,7 +368,7 @@
                         </div>
                         <div class="column">
                             <div class="field">
-                                <label class="label is-small has-text-primary">{{ form.status.label }}</label>
+                                <label class="label is-small">{{ form.status.label }}</label>
                                 <div class="control">
                                     <div class="select is-primary is-fullwidth">{{ form.status }}</div>
                                 </div>
