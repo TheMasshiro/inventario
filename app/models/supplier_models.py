@@ -13,6 +13,111 @@ USER_INVENTORY_QUERY = """
 
 
 class Suppliers:
+    def get_supplier_by_name(
+        self, company_name: str | None = None, supplier_name: str | None = None
+    ):
+        supplier_query = """
+        SELECT supplier_id,
+                company_name,
+                supplier_name,
+                email,
+                phone,
+                status
+        FROM suppliers
+        WHERE company_name = ? AND supplier_name = ? AND inventory_id = ?
+        """
+        try:
+            with get_db_connection() as conn:
+                cur = conn.cursor()
+                result = cur.execute(
+                    USER_INVENTORY_QUERY, (current_user.user_id,)
+                ).fetchone()
+
+                if result is None:
+                    logging.error("No supplier found for the current user.")
+                    return None
+
+                inventory_id = result["inventory_id"]
+
+                supplier = cur.execute(
+                    supplier_query, (company_name, supplier_name, inventory_id)
+                ).fetchone()
+
+                return supplier
+        except sqlite3.DatabaseError as e:
+            logging.error(f"Unexpected error while fetching item: {e}")
+            return None
+
+    def get_supplier_by_email(
+        self, company_name: str | None = None, email: str | None = None
+    ):
+        supplier_query = """
+        SELECT supplier_id,
+                company_name,
+                supplier_name,
+                email,
+                phone,
+                status
+        FROM suppliers
+        WHERE company_name = ? AND email = ? AND inventory_id = ?
+        """
+        try:
+            with get_db_connection() as conn:
+                cur = conn.cursor()
+                result = cur.execute(
+                    USER_INVENTORY_QUERY, (current_user.user_id,)
+                ).fetchone()
+
+                if result is None:
+                    logging.error("No supplier found for the current user.")
+                    return None
+
+                inventory_id = result["inventory_id"]
+
+                supplier = cur.execute(
+                    supplier_query, (company_name, email, inventory_id)
+                ).fetchone()
+
+                return supplier
+        except sqlite3.DatabaseError as e:
+            logging.error(f"Unexpected error while fetching item: {e}")
+            return None
+
+    def get_supplier_by_phone(
+        self, company_name: str | None = None, phone: str | None = None
+    ):
+        supplier_query = """
+        SELECT supplier_id,
+                company_name,
+                supplier_name,
+                email,
+                phone,
+                status
+        FROM suppliers
+        WHERE company_name = ? AND phone = ? AND inventory_id = ?
+        """
+        try:
+            with get_db_connection() as conn:
+                cur = conn.cursor()
+                result = cur.execute(
+                    USER_INVENTORY_QUERY, (current_user.user_id,)
+                ).fetchone()
+
+                if result is None:
+                    logging.error("No supplier found for the current user.")
+                    return None
+
+                inventory_id = result["inventory_id"]
+
+                supplier = cur.execute(
+                    supplier_query, (company_name, phone, inventory_id)
+                ).fetchone()
+
+                return supplier
+        except sqlite3.DatabaseError as e:
+            logging.error(f"Unexpected error while fetching item: {e}")
+            return None
+
     def get_supplier(self, supplier_id: int | None = None):
         supplier_query = """
             SELECT supplier_id,
@@ -111,17 +216,12 @@ class Suppliers:
     ) -> bool:
         update_product_query = """
             UPDATE suppliers
-            SET company_nam = ?, 
+            SET company_name = ?, 
                 supplier_name = ?, 
                 email = ?, 
                 phone = ?, 
-                status = ?, 
+                status = ?
             WHERE supplier_id = ? AND inventory_id = ?
-        """
-        update_supplier_query = """
-            UPDATE suppliers 
-            SET supplier_name = ?
-            WHERE product_id = ?
         """
         try:
             with get_db_connection() as conn:
@@ -148,7 +248,6 @@ class Suppliers:
                         inventory_id,
                     ),
                 )
-                cur.execute(update_supplier_query, (supplier_name, supplier_id))
                 conn.commit()
 
                 return True
