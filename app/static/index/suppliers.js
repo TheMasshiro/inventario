@@ -15,7 +15,7 @@ function getSupplierInventory() {
 
       if (this.title === "Supplier Edit") {
         console.log("Edit button clicked");
-        editTitle.textContent = `Editing ${supplierName} from ${companyName}`;
+        editTitle.textContent = `Editing ${companyName}`;
         const editForm = document.getElementById("editSupplierForm");
         if (!editForm) {
           return;
@@ -38,7 +38,7 @@ function getSupplierInventory() {
           }
         }
       } else if (this.title == "Supplier Delete") {
-        deleteTitle.textContent = `Remove ${supplierName} from ${companyName}?`;
+        deleteTitle.textContent = `Remove supplier ${companyName}?`;
         const deleteForm = document.getElementById("deleteSupplierForm");
         if (!deleteForm) {
           return;
