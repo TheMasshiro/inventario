@@ -107,21 +107,21 @@ class EditProfile(FlaskForm):
         if not current_user.check_password(old_password.data):
             raise ValidationError("Incorrect password")
 
-    def validate_new_password(self, field):
-        if field.data == self.old_password.data:
+    def validate_new_password(self, password):
+        if password.data == self.old_password.data:
             raise ValidationError("New password must be different from old password")
 
-        if not any(char.isupper() for char in field.data):
+        if not any(char.isupper() for char in password.data):
             raise ValidationError("Password must contain at least one uppercase letter")
 
-        if not any(char.islower() for char in field.data):
+        if not any(char.islower() for char in password.data):
             raise ValidationError("Password must contain at least one lowercase letter")
 
-        if not any(char.isdigit() for char in field.data):
+        if not any(char.isdigit() for char in password.data):
             raise ValidationError("Password must contain at least one number")
 
         special_chars = '!@#$%^&*(),.?":{}|<>'
-        if not any(char in special_chars for char in field.data):
+        if not any(char in special_chars for char in password.data):
             raise ValidationError(
                 "Password must contain at least one special character"
             )
