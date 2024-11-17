@@ -27,11 +27,13 @@ def inventory():
 
 
 @main.route("/inventory/edit/<int:product_id>", methods=["POST"])
+@login_required
 def edit_product(product_id):
     return InventoryManager().edit_product(product_id)
 
 
 @main.route("/inventory/delete/<int:product_id>", methods=["POST"])
+@login_required
 def remove_product(product_id):
     return InventoryManager().remove_product(product_id)
 
@@ -49,19 +51,15 @@ def suppliers():
 
 
 @main.route("/suppliers/edit/<int:supplier_id>", methods=["POST"])
+@login_required
 def edit_supplier(supplier_id):
     return SuppliersManager().edit_suppliers(supplier_id)
 
 
 @main.route("/suppliers/delete/<int:supplier_id>", methods=["POST"])
+@login_required
 def remove_supplier(supplier_id):
     return SuppliersManager().remove_suppliers(supplier_id)
-
-
-@main.route("/about", methods=["GET", "POST"])
-@login_required
-def about():
-    return InventoryManager().about()
 
 
 @main.route("/user/<username>", methods=["GET", "POST"])
