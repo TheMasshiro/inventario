@@ -20,17 +20,19 @@
                             <table class="table is-fullwidth">
                                 <thead>
                                     <tr>
-                                        <th>Product</th>
-                                        <th>Sold</th>
-                                        <th>Stock</th>
+                                        <th class="has-text-grey has-text-centered">Product</th>
+                                        <th class="has-text-grey has-text-centered">Sold</th>
+                                        <th class="has-text-grey has-text-centered">Stock</th>
+                                        <th class="has-text-grey has-text-centered">Supplier</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for product in best_selling %}
                                         <tr>
-                                            <td>{{ product.product_name }}</td>
-                                            <td>{{ product.units_sold }}</td>
-                                            <td>{{ product.quantity }}</td>
+                                            <td class="has-text-centered">{{ product.product_name }}</td>
+                                            <td class="has-text-centered">{{ product.units_sold }}</td>
+                                            <td class="has-text-centered">{{ product.quantity }}</td>
+                                            <td class="has-text-centered">{{ product.supplier }}</td>
                                         </tr>
                                     {% endfor %}
                                 </tbody>
@@ -53,23 +55,25 @@
                             <table class="table is-fullwidth">
                                 <thead>
                                     <tr>
-                                        <th>Product</th>
-                                        <th>Status</th>
-                                        <th>Stock</th>
+                                        <th class="has-text-grey has-text-centered">Product</th>
+                                        <th class="has-text-grey has-text-centered">Status</th>
+                                        <th class="has-text-grey has-text-centered">Stock</th>
+                                        <th class="has-text-grey has-text-centered">Supplier</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for product in low_stock %}
                                         <tr>
-                                            <td>{{ product.name }}</td>
-                                            <td>
+                                            <td class="has-text-centered">{{ product.name }}</td>
+                                            <td class="has-text-centered">
                                                 {% if product.stock == 0 %}
                                                     <span class="tag is-danger">Out of Stock</span>
                                                 {% else %}
                                                     <span class="tag is-warning">Low Stock</span>
                                                 {% endif %}
                                             </td>
-                                            <td>{{ product.stock }}</td>
+                                            <td class="has-text-centered">{{ product.stock }}</td>
+                                            <td class="has-text-centered">{{ product.supplier }}</td>
                                         </tr>
                                     {% endfor %}
                                 </tbody>
