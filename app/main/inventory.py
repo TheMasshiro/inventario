@@ -26,14 +26,6 @@ class InventoryInterface(ABC):
     def remove_product(self, product_id) -> Any:
         pass
 
-    @abstractmethod
-    def analytics(self) -> Any:
-        pass
-
-    @abstractmethod
-    def about(self) -> Any:
-        pass
-
 
 class InventoryManager(InventoryInterface):
     def purchase(self) -> Any:
@@ -68,13 +60,32 @@ class InventoryManager(InventoryInterface):
 
         if form.validate_on_submit():
             current_date = date.today().strftime("%d-%m-%Y")
+            product = user_inventory.get_item_by_name(form.product_name.data)
+
+            product_name = form.product_name.data
+            price = form.price.data
+            stock = form.stock.data
+            supplier_name = form.supplier_name.data
+
+            if product_name is None:
+                flash(
+                    f"{form.product_name.data} does not exist in the inventory",
+                    "danger-inventory",
+                )
+                return redirect(url_for("main.inventory"))
+
+            if (
+                supplier_name.strip().lower() == product[5].strip().lower()
+                and product_name.strip().lower() == product[1].strip().lower()
+            ):
+                flash(
+                    f"{form.product_name.data} already exists in the inventory",
+                    "danger-inventory",
+                )
+                return redirect(url_for("main.inventory"))
 
             add_item = user_inventory.add_item(
-                form.product_name.data,
-                form.price.data,
-                form.stock.data,
-                current_date,
-                form.supplier_name.data,
+                product_name, price, stock, current_date, supplier_name
             )
 
             if add_item:
@@ -98,42 +109,63 @@ class InventoryManager(InventoryInterface):
     def edit_product(self, product_id: int | None = None) -> Any:
         user_inventory = Inventory()
         form = ProductForm()
-        product = user_inventory.get_item(product_id)
 
-        if product is None:
+        product_by_id = user_inventory.get_item(product_id)
+        if product_by_id is None:
+            flash("Product not found", "danger-inventory")
             return redirect(url_for("main.inventory"))
 
-        companies = []
-        for company in user_inventory.get_supplier_companies():
-            companies.append(company["company_name"])
-
+        companies = [
+            company["company_name"]
+            for company in user_inventory.get_supplier_companies()
+        ]
         form.supplier_name.choices = companies
 
         if form.validate_on_submit():
             current_date = date.today().strftime("%d-%m-%Y")
 
+            new_product_name = form.product_name.data
+            new_price = form.price.data
+            new_stock = form.stock.data
+            new_supplier_name = form.supplier_name.data
+
+            if not new_product_name:
+                flash("Product name cannot be empty", "danger-inventory")
+                return redirect(url_for("main.inventory"))
+
+            existing_product = user_inventory.get_item_by_name_and_supplier(
+                new_product_name, new_supplier_name
+            )
+
+            if existing_product and existing_product[0] != product_id:
+                flash(
+                    f"{new_product_name} already exists for the supplier {new_supplier_name}",
+                    "danger-inventory",
+                )
+                return redirect(url_for("main.inventory"))
+
             edit_item = user_inventory.edit_item(
                 product_id,
-                form.product_name.data,
-                form.price.data,
-                form.stock.data,
+                new_product_name,
+                new_price,
+                new_stock,
                 current_date,
-                form.supplier_name.data,
+                new_supplier_name,
             )
 
             if edit_item:
                 flash(
-                    f"{product[1]} updated to {form.product_name.data}",
+                    f"Successfully updated '{new_product_name}'",
                     "success-inventory",
                 )
             else:
                 flash(
-                    f"Failed to update {form.product_name.data}. {form.errors}.",
+                    f"Failed to update '{new_product_name}'. {form.errors}.",
                     "danger-inventory",
                 )
         else:
             flash(
-                f"Failed to update {form.product_name.data}. {form.errors}.",
+                f"Failed to update '{form.product_name.data}'. {form.errors}.",
                 "danger-inventory",
             )
 
@@ -152,13 +184,3 @@ class InventoryManager(InventoryInterface):
             flash(f"Failed to remove {product[1]} from inventory", "danger-inventory")
 
         return redirect(url_for("main.inventory"))
-
-    def analytics(self) -> Any:
-        if request.method == "GET":
-            return render_template("main/analytics.html", title="Analytics")
-        return render_template("main/analytics.html", title="Analytics")
-
-    def about(self) -> Any:
-        if request.method == "GET":
-            return render_template("main/about.html", title="About")
-        return render_template("main/about.html", title="About")
