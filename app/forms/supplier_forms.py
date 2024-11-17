@@ -2,6 +2,8 @@ from flask_wtf import FlaskForm
 from wtforms import EmailField, SelectField, StringField, SubmitField, ValidationError
 from wtforms.validators import DataRequired, Length
 
+from app.models.supplier_models import Suppliers
+
 
 class SupplierForm(FlaskForm):
     company_name = StringField(
@@ -51,16 +53,3 @@ class SupplierForm(FlaskForm):
     add_submit = SubmitField("Add Supplier")
     edit_submit = SubmitField("Save Changes")
     remove_submit = SubmitField("Remove Supplier")
-
-    def validate_supplier_name(self, supplier_name):
-        supplier = supplier_name.data
-
-        if not supplier.isalpha():
-            raise ValidationError("Supplier name must contain only letters.")
-
-    def validate_phone(self, phone):
-        phone_number = phone.data
-
-        number_format = phone_number[0:2]
-        if number_format != "09" and number_format != "63":
-            raise ValidationError("Phone number must start with '09' or '63'.")
