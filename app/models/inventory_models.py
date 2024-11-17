@@ -42,7 +42,83 @@ class Inventory:
             logging.error(f"Unexpected error while fetching an item: {e}")
             return []
 
-    def get_item(self, product_id):
+    def get_item_by_name_and_supplier(self, product_name: str, supplier_name: str):
+        products_query = """
+        SELECT product_id, 
+               product_name, 
+               price, stock, 
+               last_updated, 
+               supplier_name
+        FROM products
+        WHERE inventory_id = ? AND product_name = ? AND supplier_name = ?;
+        """
+
+        try:
+            with get_db_connection() as conn:
+                cur = conn.cursor()
+                result = cur.execute(
+                    USER_INVENTORY_QUERY, (current_user.user_id,)
+                ).fetchone()
+
+                if result is None:
+                    logging.error("No inventory found for the current user.")
+                    return []
+
+                inventory_id = result["inventory_id"]
+                product = cur.execute(
+                    products_query,
+                    (
+                        inventory_id,
+                        product_name,
+                        supplier_name,
+                    ),
+                ).fetchone()
+
+                return product
+        except sqlite3.DatabaseError as e:
+            logging.error(f"Unexpected error while fetching an item: {e}")
+            return []
+
+    def get_item_by_name(
+        self,
+        product_name: str | None = None,
+    ):
+        products_query = """
+        SELECT product_id, 
+               product_name, 
+               price, stock, 
+               last_updated, 
+               supplier_name
+        FROM products
+        WHERE inventory_id = ? AND product_name = ?;
+        """
+
+        try:
+            with get_db_connection() as conn:
+                cur = conn.cursor()
+                result = cur.execute(
+                    USER_INVENTORY_QUERY, (current_user.user_id,)
+                ).fetchone()
+
+                if result is None:
+                    logging.error("No inventory found for the current user.")
+                    return []
+
+                inventory_id = result["inventory_id"]
+                product = cur.execute(
+                    products_query,
+                    (
+                        inventory_id,
+                        product_name,
+                    ),
+                ).fetchone()
+
+                return product
+        except sqlite3.DatabaseError as e:
+            logging.error(f"Unexpected error while fetching an item: {e}")
+            return []
+
+    def get_item(self, product_id: int | None = None):
         products_query = """
         SELECT product_id, 
                product_name, 
