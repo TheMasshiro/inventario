@@ -46,6 +46,8 @@
                            href="{{ url_for("main.analytics") }}">Analytics</a>
                         <a class="navbar-item {% if current_page == 'suppliers' %}has-background-info-light has-text-black{% endif %}"
                            href="{{ url_for("main.suppliers") }}">Suppliers</a>
+                        <a class="navbar-item {% if current_page == 'customers' %}has-background-info-light has-text-black{% endif %}"
+                           href="{{ url_for("main.customers") }}">Customers</a>
                         <div class="navbar-item has-dropdown is-hoverable">
                             <a class="navbar-link">More</a>
                             <div class="navbar-dropdown">
@@ -96,8 +98,10 @@
             {% block main %}{% endblock %}
         </main>
         <script src="/static/index/index.js"></script>
-        <script src="/static/index/items.js"></script>
+        <script src="/static/index/products.js"></script>
         <script src="/static/index/suppliers.js"></script>
+        <script src="/static/index/customers.js"></script>
+        <script src="/static/index/search.js"></script>
         <script src="https://kit.fontawesome.com/18e0e7470f.js"
                 crossorigin="anonymous"></script>
     </body>
