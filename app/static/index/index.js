@@ -4,8 +4,12 @@ document.addEventListener("DOMContentLoaded", () => {
   initNavbarBurger();
   initModals();
   initNotification();
+  initSearch("product");
+  initSearch("supplier");
+  initSearch("customer");
   getItemInventory();
   getSupplierInventory();
+  getCustomerInventory();
 });
 
 function initTermsAndConditions() {
