@@ -5,15 +5,11 @@ from typing import Any
 from flask import flash, redirect, render_template, request, url_for
 
 from app.forms.inventory_forms import ProductForm
-from app.helpers import format_currency, paginate_inventory
+from app.helpers import format_currency
 from app.models.inventory_models import Inventory
 
 
 class InventoryInterface(ABC):
-    @abstractmethod
-    def purchase(self) -> Any:
-        pass
-
     @abstractmethod
     def inventory(self) -> Any:
         pass
@@ -26,19 +22,18 @@ class InventoryInterface(ABC):
     def remove_product(self, product_id) -> Any:
         pass
 
+    @abstractmethod
+    def search_product(self) -> Any:
+        pass
+
 
 class InventoryManager(InventoryInterface):
-    def purchase(self) -> Any:
-        if request.method == "GET":
-            return render_template("main/purchase.html", title="Purchase")
-        return render_template("main/purchase.html", title="Purchase")
-
     def inventory(self) -> Any:
         user_inventory = Inventory()
-        page = request.args.get("page", 1, type=int)
         form = ProductForm()
 
-        pagination = paginate_inventory(page, user_inventory)
+        products = user_inventory.get_products()
+
         companies = []
         for company in user_inventory.get_supplier_companies():
             companies.append(company["company_name"])
@@ -49,12 +44,8 @@ class InventoryManager(InventoryInterface):
             return render_template(
                 "main/inventory.html",
                 title="Inventory",
-                products=pagination[0],
+                products=products,
                 format_currency=format_currency,
-                page=page,
-                start_page=pagination[1],
-                end_page=pagination[2],
-                total_pages=pagination[3],
                 form=form,
             )
 
@@ -75,7 +66,8 @@ class InventoryManager(InventoryInterface):
                 return redirect(url_for("main.inventory"))
 
             if (
-                supplier_name.strip().lower() == product[5].strip().lower()
+                product
+                and supplier_name.strip().lower() == product[5].strip().lower()
                 and product_name.strip().lower() == product[1].strip().lower()
             ):
                 flash(
@@ -184,3 +176,14 @@ class InventoryManager(InventoryInterface):
             flash(f"Failed to remove {product[1]} from inventory", "danger-inventory")
 
         return redirect(url_for("main.inventory"))
+
+    def search_product(self) -> Any:
+        query = request.args.get("q", "")
+        user_inventory = Inventory()
+        products = user_inventory.search_product(query)
+
+        return render_template(
+            "partials/product_rows.html",
+            products=products,
+            format_currency=format_currency,
+        )
