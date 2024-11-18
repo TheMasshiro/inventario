@@ -1,8 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import EmailField, SelectField, StringField, SubmitField, ValidationError
+from wtforms import EmailField, SelectField, StringField, SubmitField
 from wtforms.validators import DataRequired, Length
-
-from app.models.supplier_models import Suppliers
 
 
 class SupplierForm(FlaskForm):
