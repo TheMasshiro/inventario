@@ -38,9 +38,21 @@ CREATE TABLE IF NOT EXISTS products (
 
 CREATE TABLE IF NOT EXISTS sales(
     sale_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    inventory_id INTEGER NOT NULL,
     product_id INTEGER NOT NULL,
-    product_sold INTEGER NOT NULL,
-    FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE
+    customer_id INTEGER NOT NULL,
+    sold INTEGER NOT NULL,
+    sale_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (inventory_id) REFERENCES user_inventory(inventory_id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE,
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS customers(
+    customer_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    inventory_id INTEGER NOT NULL,
+    customer_name TEXT NOT NULL,
+    FOREIGN KEY (inventory_id) REFERENCES user_inventory(inventory_id) ON DELETE CASCADE
 );
 
 -- Indexes
