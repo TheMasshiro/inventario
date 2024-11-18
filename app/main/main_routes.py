@@ -1,9 +1,11 @@
-from flask import redirect, render_template, url_for
+from flask import redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
 from app.main import main_bp as main
+from app.main.analytics import AnalyticsManager
 from app.main.inventory import InventoryManager
 from app.main.profile import ProfileManager
+from app.main.purchase import PurchaseManager
 from app.main.suppliers import SuppliersManager
 
 
@@ -14,10 +16,28 @@ def index():
     return redirect(url_for("main.inventory"))
 
 
+@main.route("/product/search")
+@login_required
+def search_product():
+    return InventoryManager().search_product()
+
+
+@main.route("/supplier/search")
+@login_required
+def search_supplier():
+    return SuppliersManager().search_supplier()
+
+
+@main.route("/customer/search")
+@login_required
+def search_customer():
+    return AnalyticsManager().search_customer()
+
+
 @main.route("/purchase", methods=["GET", "POST"])
 @login_required
 def purchase():
-    return InventoryManager().purchase()
+    return PurchaseManager().purchase()
 
 
 @main.route("/inventory", methods=["GET", "POST"])
@@ -41,7 +61,25 @@ def remove_product(product_id):
 @main.route("/analytics", methods=["GET", "POST"])
 @login_required
 def analytics():
-    return InventoryManager().analytics()
+    return AnalyticsManager().analytics()
+
+
+@main.route("/customers", methods=["GET", "POST"])
+@login_required
+def customers():
+    return AnalyticsManager().customers()
+
+
+@main.route("/customer/edit/<int:customer_id>", methods=["POST"])
+@login_required
+def edit_customer(customer_id):
+    return AnalyticsManager().edit_customer(customer_id)
+
+
+@main.route("/customer/delete/<int:customer_id>", methods=["POST"])
+@login_required
+def remove_customer(customer_id):
+    return AnalyticsManager().remove_customer(customer_id)
 
 
 @main.route("/suppliers", methods=["GET", "POST"])
