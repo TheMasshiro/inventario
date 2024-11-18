@@ -1,0 +1,48 @@
+{# templates/partials/product_rows.html #}
+{% for product in products %}
+    <tr class="has-background-white">
+        <td class="px-6 py-4 has-text-dark has-text-centered is-vcentered">{{ product.product_name }}</td>
+        <td class="px-6 py-4 has-text-dark has-text-centered is-vcentered">{{ format_currency(product.price) }}</td>
+        <td class="px-6 py-4 has-text-dark has-text-centered is-vcentered">{{ product.stock }}</td>
+        <td class="px-6 py-4 has-text-dark has-text-centered is-vcentered">
+            {{ format_currency(product.price * product.stock) }}
+        </td>
+        <td class="px-6 py-4 has-text-centered is-vcentered">
+            {% if product.stock >= 1 and product.stock <= 10 %}
+                <span class="tag is-warning has-text-white">Low Stock</span>
+            {% elif product.stock == 0 %}
+                <span class="tag is-danger has-text-white">Out of Stock</span>
+            {% else %}
+                <span class="tag is-success has-text-white">In Stock</span>
+            {% endif %}
+        </td>
+        <td class="px-6 py-4 has-text-dark has-text-centered is-vcentered">{{ product.last_updated }}</td>
+        <td class="px-6 py-4 has-text-dark has-text-centered is-vcentered">{{ product.supplier_name }}</td>
+        <td class="px-6 py-4 has-text-centered is-vcentered align-middle">
+            <div class="is-flex is-justify-content-center">
+                <button class="button is-ghost has-text-info p-1 mr-2 js-modal-trigger inventory-button"
+                        title="Inventory Edit"
+                        data-target="edit-product-modal"
+                        data-product-id="{{ product.product_id }}"
+                        data-product-name="{{ product.product_name }}"
+                        data-product-price="{{ product.price }}"
+                        data-product-stock="{{ product.stock }}"
+                        data-product-supplier="{{ product.supplier_name }}">
+                    <span class="icon is-medium">
+                        <i class="fas fa-edit fa-lg"></i>
+                    </span>
+                </button>
+                <button class="button is-ghost has-text-danger p-1 js-modal-trigger inventory-button"
+                        title="Inventory Delete"
+                        id="inventory-button"
+                        data-target="delete-product-modal"
+                        data-product-id="{{ product.product_id }}"
+                        data-product-name="{{ product.product_name }}">
+                    <span class="icon is-medium">
+                        <i class="fas fa-trash fa-lg"></i>
+                    </span>
+                </button>
+            </div>
+        </td>
+    </tr>
+{% endfor %}
