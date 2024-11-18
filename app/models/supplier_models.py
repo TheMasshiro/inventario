@@ -13,6 +13,69 @@ USER_INVENTORY_QUERY = """
 
 
 class Suppliers:
+    def get_suppliers(self):
+        suppliers_query = """
+            SELECT *
+            FROM suppliers
+            WHERE inventory_id = ?
+            ORDER BY company_name;
+        """
+        try:
+            with get_db_connection() as conn:
+                cur = conn.cursor()
+                result = cur.execute(
+                    USER_INVENTORY_QUERY, (current_user.user_id,)
+                ).fetchone()
+
+                if result is None:
+                    logging.error("No inventory found for the current user.")
+                    return
+
+                inventory_id = result["inventory_id"]
+
+                cur.execute(suppliers_query, (inventory_id,))
+                suppliers = cur.fetchall()
+
+            return suppliers
+        except sqlite3.DatabaseError as e:
+            logging.error(f"Unexpected error while fetching suppliers: {e}")
+            return None
+
+    def search_supplier(self, q):
+        supplier_query = """
+        SELECT supplier_id,
+                company_name,
+                supplier_name,
+                email,
+                phone,
+                status
+        FROM suppliers
+        WHERE inventory_id = ? 
+        AND (company_name LIKE ? OR supplier_name LIKE ?)
+        ORDER BY company_name;
+        """
+        search_term = f"%{q}%"
+        try:
+            with get_db_connection() as conn:
+                cur = conn.cursor()
+                result = cur.execute(
+                    USER_INVENTORY_QUERY, (current_user.user_id,)
+                ).fetchone()
+
+                if result is None:
+                    logging.error("No inventory found for the current user.")
+                    return []
+
+                inventory_id = result["inventory_id"]
+
+                cur.execute(supplier_query, (inventory_id, search_term, search_term))
+                suppliers = cur.fetchall()
+
+                return suppliers or []
+        except sqlite3.DatabaseError as e:
+            logging.error(f"Unexpected error while fetching suppliers: {e}")
+            return []
+
     def get_supplier_by_name(
         self, company_name: str | None = None, supplier_name: str | None = None
     ):
@@ -285,62 +348,3 @@ class Suppliers:
         except sqlite3.DatabaseError as e:
             logging.error(f"Error deleting item: {str(e)}")
             return False
-
-    def get_total_suppliers(self):
-        query = """
-            SELECT COUNT(*) 
-            FROM suppliers
-            WHERE inventory_id = ?;
-        """
-        try:
-            with get_db_connection() as conn:
-                cur = conn.cursor()
-                result = cur.execute(
-                    USER_INVENTORY_QUERY, (current_user.user_id,)
-                ).fetchone()
-
-                if result is None:
-                    logging.error("No suppliers found for the current user.")
-                    return 0
-
-                inventory_id = result["inventory_id"]
-                cur.execute(query, (inventory_id,))
-                total_suppliers = cur.fetchone()[0]
-
-            return total_suppliers
-        except sqlite3.DatabaseError as e:
-            logging.error(f"Unexpected error while fetching total items: {e}")
-            return 0
-
-    def get_all_paginated_suppliers(self, offset: int, limit: int):
-        suppliers_query = """
-        SELECT supplier_id,
-                company_name,
-                supplier_name,
-                email,
-                phone,
-                status
-        FROM suppliers
-        WHERE inventory_id = ?
-        ORDER BY supplier_name
-        LIMIT ? OFFSET ?
-        """
-        try:
-            with get_db_connection() as conn:
-                cur = conn.cursor()
-                result = cur.execute(
-                    USER_INVENTORY_QUERY, (current_user.user_id,)
-                ).fetchone()
-                if result is None:
-                    logging.error("No suppliers found for the current user.")
-                    return []
-
-                inventory_id = result["inventory_id"]
-
-                suppliers = cur.execute(
-                    suppliers_query, (inventory_id, limit, offset)
-                ).fetchall()
-                return suppliers
-        except sqlite3.DatabaseError as e:
-            logging.error(f"Unexpected error while fetching items: {e}")
-            return []
