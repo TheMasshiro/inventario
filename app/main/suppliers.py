@@ -4,7 +4,7 @@ from typing import Any
 from flask import flash, redirect, render_template, request, url_for
 
 from app.forms.supplier_forms import SupplierForm
-from app.helpers import error_messages, paginate_suppliers
+from app.helpers import error_messages
 from app.models.supplier_models import Suppliers
 
 
@@ -21,24 +21,23 @@ class SuppliersInterface(ABC):
     def remove_suppliers(self, supplier_id) -> Any:
         pass
 
+    @abstractmethod
+    def search_supplier(self) -> Any:
+        pass
+
 
 class SuppliersManager(SuppliersInterface):
     def suppliers(self) -> Any:
         user_supplier = Suppliers()
-        page = request.args.get("page", 1, type=int)
         form = SupplierForm()
 
-        pagination = paginate_suppliers(page, user_supplier)
+        suppliers = user_supplier.get_suppliers()
 
         if request.method == "GET":
             return render_template(
                 "main/suppliers.html",
                 title="Suppliers",
-                suppliers=pagination[0],
-                page=page,
-                start_page=pagination[1],
-                end_page=pagination[2],
-                total_pages=pagination[3],
+                suppliers=suppliers,
                 form=form,
             )
 
@@ -198,8 +197,6 @@ class SuppliersManager(SuppliersInterface):
         user_supplier = Suppliers()
         supplier = user_supplier.get_supplier(supplier_id)
 
-        print(supplier_id)
-
         if supplier is None:
             return redirect(url_for("main.suppliers"))
 
@@ -215,3 +212,13 @@ class SuppliersManager(SuppliersInterface):
             )
 
         return redirect(url_for("main.suppliers"))
+
+    def search_supplier(self) -> Any:
+        query = request.args.get("q", "")
+        user_supplier = Suppliers()
+        suppliers = user_supplier.search_supplier(query)
+
+        return render_template(
+            "partials/supplier_rows.html",
+            suppliers=suppliers,
+        )
