@@ -12,6 +12,97 @@ USER_INVENTORY_QUERY = """
         """
 
 
+class Purchase:
+    def buy(self, product_id: int, quantity: int):
+        update_purchase_query = """
+        UPDATE sales
+        SET sold = ?
+        WHERE product_id = ? AND inventory_id = ?;
+        """
+
+        get_current_sold_query = """
+        SELECT sold
+        FROM sales
+        WHERE product_id = ? AND inventory_id = ?;
+        """
+
+        update_stock_query = """
+        UPDATE products
+        SET stock = ?
+        WHERE product_id = ? AND inventory_id = ?;
+        """
+
+        get_current_stock_query = """
+        SELECT stock
+        FROM products
+        WHERE product_id = ? AND inventory_id = ?;
+        """
+
+        try:
+            with get_db_connection() as conn:
+                cur = conn.cursor()
+                result = cur.execute(
+                    USER_INVENTORY_QUERY, (current_user.user_id,)
+                ).fetchone()
+
+                if result is None:
+                    logging.error("No inventory found for the current user.")
+                    return False
+
+                inventory_id = result["inventory_id"]
+
+                current_sold = cur.execute(
+                    get_current_sold_query,
+                    (
+                        product_id,
+                        inventory_id,
+                    ),
+                ).fetchone()
+
+                if current_sold is None:
+                    logging.error("No purchase found for the current user.")
+                    return False
+
+                current_stock = cur.execute(
+                    get_current_stock_query,
+                    (
+                        product_id,
+                        inventory_id,
+                    ),
+                ).fetchone()
+
+                if current_stock is None:
+                    logging.error("No stock found for the current user.")
+                    return False
+
+                stock = current_stock["stock"] - int(quantity)
+
+                cur.execute(
+                    update_stock_query,
+                    (
+                        stock,
+                        product_id,
+                        inventory_id,
+                    ),
+                )
+
+                total_sold = current_sold["sold"] + int(quantity)
+
+                cur.execute(
+                    update_purchase_query,
+                    (
+                        total_sold,
+                        product_id,
+                        inventory_id,
+                    ),
+                )
+                conn.commit()
+                return True
+        except sqlite3.DatabaseError as e:
+            logging.error(f"Error buying item: {str(e)}")
+            return False
+
+
 class Inventory:
     def get_products(self):
         product_query = """
@@ -247,6 +338,16 @@ class Inventory:
             WHERE company_name = ?
         """
 
+        sale_insert_query = """
+        INSERT INTO sales
+        (
+            product_id,
+            inventory_id,
+            sold
+        )
+        VALUES (?, ?, 0)
+        """
+
         try:
             with get_db_connection() as conn:
                 cur = conn.cursor()
@@ -281,6 +382,15 @@ class Inventory:
                         price,
                         stock,
                         date,
+                    ),
+                )
+
+                product_id = cur.lastrowid
+                cur.execute(
+                    sale_insert_query,
+                    (
+                        product_id,
+                        inventory_id,
                     ),
                 )
 
