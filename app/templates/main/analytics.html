@@ -20,21 +20,14 @@
                             <table class="table is-fullwidth">
                                 <thead>
                                     <tr>
-                                        <th class="has-text-grey has-text-centered">Product</th>
+                                        <th class="has-text-grey has-text-centered">Product Name</th>
                                         <th class="has-text-grey has-text-centered">Sold</th>
-                                        <th class="has-text-grey has-text-centered">Stock</th>
+                                        <th class="has-text-grey has-text-centered">Total</th>
                                         <th class="has-text-grey has-text-centered">Supplier</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    {% for product in best_selling %}
-                                        <tr>
-                                            <td class="has-text-centered">{{ product.product_name }}</td>
-                                            <td class="has-text-centered">{{ product.units_sold }}</td>
-                                            <td class="has-text-centered">{{ product.quantity }}</td>
-                                            <td class="has-text-centered">{{ product.supplier }}</td>
-                                        </tr>
-                                    {% endfor %}
+                                <tbody id="best-selling-tbody">
+                                    {% include 'partials/best_selling_rows.html' %}
                                 </tbody>
                             </table>
                         </div>
@@ -55,27 +48,14 @@
                             <table class="table is-fullwidth">
                                 <thead>
                                     <tr>
-                                        <th class="has-text-grey has-text-centered">Product</th>
+                                        <th class="has-text-grey has-text-centered">Product Name</th>
                                         <th class="has-text-grey has-text-centered">Status</th>
                                         <th class="has-text-grey has-text-centered">Stock</th>
                                         <th class="has-text-grey has-text-centered">Supplier</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    {% for product in low_stock %}
-                                        <tr>
-                                            <td class="has-text-centered">{{ product.name }}</td>
-                                            <td class="has-text-centered">
-                                                {% if product.stock == 0 %}
-                                                    <span class="tag is-danger">Out of Stock</span>
-                                                {% else %}
-                                                    <span class="tag is-warning">Low Stock</span>
-                                                {% endif %}
-                                            </td>
-                                            <td class="has-text-centered">{{ product.stock }}</td>
-                                            <td class="has-text-centered">{{ product.supplier }}</td>
-                                        </tr>
-                                    {% endfor %}
+                                <tbody id="low-stock-tbody">
+                                    {% include 'partials/low_stock_rows.html' %}
                                 </tbody>
                             </table>
                         </div>
