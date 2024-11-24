@@ -1,0 +1,24 @@
+{# templates/partials/purchase_rows.html #}
+{% for product in products %}
+    {% if
+        product.stock >= 1 %}
+        <tr id="purchase-tr">
+            <td class="px-6 py-4 has-text-dark has-text-centered is-vcentered">{{ product.product_name }}</td>
+            <td class="px-6 py-4 has-text-dark has-text-centered is-vcentered">{{ format_currency(product.price) }}</td>
+            <td class="px-6 py-4 has-text-dark has-text-centered is-vcentered">{{ product.stock }}</td>
+            <td class="px-6 py-4 has-text-dark has-text-centered is-vcentered">{{ product.supplier_name }}</td>
+            <td class="px-6 py-4 has-text-centered is-vcentered align-middle">
+                <div class="is-flex is-justify-content-center">
+                    <div class="control">
+                        <input type="hidden" name="product_id" value="{{ product.product_id }}" />
+                        {{ form.quantity(class="input has-text-centered is-small", min=0,
+                                                max=product.stock, value=0) }}
+                    </div>
+                </div>
+            </td>
+            <td class="px-6 py-4 has-text-dark has-text-centered is-vcentered">
+                <span id="total-{{ product.product_id }}">{{ format_currency(0) }}</span>
+            </td>
+        </tr>
+    {% endif %}
+{% endfor %}
