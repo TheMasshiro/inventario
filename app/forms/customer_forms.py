@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired, Length
+from wtforms import HiddenField, IntegerField, SelectField, StringField, SubmitField
+from wtforms.validators import DataRequired, Length, NumberRange
 
 
 class CustomerForm(FlaskForm):
@@ -18,3 +18,26 @@ class CustomerForm(FlaskForm):
     add_submit = SubmitField("Add Customer")
     edit_submit = SubmitField("Save Changes")
     remove_submit = SubmitField("Remove Customer")
+
+
+class PurchaseForm(FlaskForm):
+    product_id = HiddenField()
+
+    customer_name = SelectField(
+        "Customer Name",
+        choices=[],
+        validators=[
+            DataRequired("Customer name is required"),
+        ],
+    )
+
+    quantity = IntegerField(
+        "Quantity",
+        default=0,
+        validators=[
+            DataRequired("Quantity is required"),
+            NumberRange(min=0, message="Quantity cannot be less than 0"),
+        ],
+    )
+
+    purchase_submit = SubmitField("Purchase")
