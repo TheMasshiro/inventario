@@ -4,7 +4,8 @@ from typing import Any
 from flask import flash, redirect, render_template, request, url_for
 
 from app.forms.customer_forms import CustomerForm
-from app.models.customer_models import Customers
+from app.helpers import format_currency
+from app.models.customer_models import Analytics, Customers
 
 
 class AnalyticsInterface(ABC):
@@ -31,9 +32,17 @@ class AnalyticsInterface(ABC):
 
 class AnalyticsManager(AnalyticsInterface):
     def analytics(self) -> Any:
+        low_stock_products = Analytics().get_low_stock_products()
+        best_selling_products = Analytics().get_best_selling_products()
+
         if request.method == "GET":
-            return render_template("main/analytics.html", title="Analytics")
-        return render_template("main/analytics.html", title="Analytics")
+            return render_template(
+                "main/analytics.html",
+                title="Analytics",
+                low_stock_products=low_stock_products,
+                best_selling_products=best_selling_products,
+                format_currency=format_currency,
+            )
 
     def customers(self) -> Any:
         user_customer = Customers()
