@@ -1,0 +1,15 @@
+{# templates/partials/low_stock_rows.html #}
+{% for product in low_stock_products %}
+    <tr>
+        <td class="has-text-centered">{{ product.product_name }}</td>
+        <td class="has-text-centered">
+            {% if product.stock == 0 %}
+                <span class="tag is-danger">Out of Stock</span>
+            {% else %}
+                <span class="tag is-warning">Low Stock</span>
+            {% endif %}
+        </td>
+        <td class="has-text-centered">{{ product.stock }}</td>
+        <td class="has-text-centered">{{ product.supplier_name }}</td>
+    </tr>
+{% endfor %}
