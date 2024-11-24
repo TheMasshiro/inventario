@@ -3,40 +3,90 @@
 {% block title %}Inventario - {{ title }}{% endblock %}
 {% block main %}
     <section class="section is-fullheight has-background-white-ter">
-        <div class="container">
+        <form action="/purchase" method="POST">
+            {{ form.csrf_token() }}
+            <div class="container">
+                {% with messages =
+                    get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {%
+                        for category, message in messages %}
+                        {% if category == "success-purchase" %}
+                            <div class="notification is-success is-light has-text-centered">
+                                {{ message }}
+                                <button class="delete"></button>
+                            </div>
+                        {% elif category == "danger-purchase" %}
+                            <div class="notification is-danger is-light has-text-centered">
+                                {{ message }}
+                                <button class="delete"></button>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <div class="columns">
+                <div class="column is-one-quarter">
+                    <div class="field is-horizontal is-align-items-center">
+                        <div class="control has-icons-left">
+                            <input class="input"
+                                   type="text"
+                                   id="purchase-search-input"
+                                   placeholder="Search product">
+                            <span class="icon is-left">
+                                <i class="fas fa-search"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="column is-one-quarter">
+                    <div class="field">
+                        <div class="control has-icons-left">
+                            <div class="select is-fullwidth">{{ form.customer_name() }}</div>
+                            <span class="icon is-left">
+                                <i class="fas fa-user"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="column is-one-quarter pt-5">
+                    <h6 class="title is-6" id="grand-total">Grand Total:</h6>
+                </div>
+            </div>
             <div class="box mb-6">
-                <!--Add search box and filter status here-->
                 <div class="table-container">
                     <table class="table is-striped is-fullwidth is-size-7">
                         <thead>
                             <tr class="has-background-white">
-                                <th class="px-6 py-3 has-text-grey has-text-centered">Item Name</th>
+                                <th class="px-6 py-3 has-text-grey has-text-centered">Product Name</th>
                                 <th class="px-6 py-3 has-text-grey has-text-centered">Price</th>
                                 <th class="px-6 py-3 has-text-grey has-text-centered">Stock</th>
-                                <th class="px-6 py-3 has-text-grey has-text-centered">Status</th>
-                                <th class="px-6 py-3 has-text-grey has-text-centered">Action</th>
+                                <th class="px-6 py-3 has-text-grey has-text-centered">Supplier</th>
+                                <th class="px-6 py-3 has-text-grey has-text-centered">Quantity</th>
+                                <th class="px-6 py-3 has-text-grey has-text-centered">Total Cost</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr class="has-background-white">
-                                <td class="px-6 py-4 has-text-dark has-text-centered is-vcentered">Snacks</td>
-                                <td class="px-6 py-4 has-text-dark has-text-centered is-vcentered">10</td>
-                                <td class="px-6 py-4 has-text-dark has-text-centered is-vcentered">10</td>
-                                <td class="px-6 py-4 has-text-centered is-vcentered">
-                                    <span class="tag is-warning has-text-white">Low Stock</span>
-                                </td>
-                                <td class="px-6 py-4 has-text-centered is-vcentered">
-                                    <button class="button is-ghost has-text-primary p-1" title="Buy">
-                                        <span class="icon is-medium">
-                                            <i class="fas fa-cart-shopping fa-lg"></i>
-                                        </span>
-                                    </button>
-                                </td>
-                            </tr>
+                        <tbody id="purchases-tbody">
+                            {% include 'partials/purchase_rows.html' %}
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-    </section>
+        <div class="column">
+            <!-- Buy button column -->
+            <div class="column is-flex is-justify-content-flex-end">
+                <div class="mx-3">
+                    <button class="button is-floating is-primary is-rounded js-modal-trigger purchase-button"
+                            data-target="buy-product-modal"
+                            title="Buy">
+                        <span class="icon is-small">
+                            <i class="fas fa-cart-shopping"></i>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</section>
 {% endblock %}
