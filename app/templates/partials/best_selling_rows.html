@@ -1,0 +1,9 @@
+{# templates/partials/best_seeling_rows.html #}
+{% for product in best_selling_products %}
+    <tr>
+        <td class="has-text-centered">{{ product.product_name }}</td>
+        <td class="has-text-centered">{{ product.total_sold }}</td>
+        <td class="has-text-centered">{{ format_currency(product.price * product.total_sold) }}</td>
+        <td class="has-text-centered">{{ product.supplier_name }}</td>
+    </tr>
+{% endfor %}
