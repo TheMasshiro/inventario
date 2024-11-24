@@ -4,13 +4,77 @@ document.addEventListener("DOMContentLoaded", () => {
   initNavbarBurger();
   initModals();
   initNotification();
-  initSearch("product");
-  initSearch("supplier");
-  initSearch("customer");
   getItemInventory();
   getSupplierInventory();
   getCustomerInventory();
+  initSearch("product");
+  initSearch("supplier");
+  initSearch("customer");
+  initSearch("purchase");
+  calculateProductTotal();
 });
+
+function calculateProductTotal() {
+  const formatCurrency = (value) => {
+    return `₱${value.toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  };
+
+  const rows = document.querySelectorAll("tr#purchase-tr");
+  const grandTotalElement = document.getElementById("grand-total");
+  let grandTotal = 0;
+
+  rows.forEach((row) => {
+    const quantityInput = row
+      .querySelector('input[name="product_id"]')
+      ?.parentElement?.querySelector('input[type="number"]');
+    const priceCell = row.querySelector("td:nth-child(2)");
+    const totalSpan = row.querySelector('span[id^="total-"]');
+
+    if (quantityInput && priceCell && totalSpan) {
+      const priceText = priceCell.textContent.trim();
+      const price = parseFloat(priceText.replace(/[^0-9.-]+/g, ""));
+
+      quantityInput.addEventListener("input", function () {
+        const quantity = parseInt(this.value) || 0;
+        const total = price * quantity;
+        totalSpan.textContent = formatCurrency(total);
+
+        // Recalculate grand total
+        grandTotal = 0;
+        rows.forEach((r) => {
+          const rowTotal = r.querySelector('span[id^="total-"]').textContent;
+          const value = parseFloat(rowTotal.replace(/[^0-9.-]+/g, ""));
+          grandTotal += value;
+        });
+
+        grandTotalElement.textContent = `Grand Total: ${formatCurrency(grandTotal)}`;
+      });
+    }
+  });
+}
+
+function adjustStock(button, adjustment) {
+  const input = button.closest(".field").querySelector("input");
+  let currentValue = parseInt(input.value, 10);
+  if (isNaN(currentValue)) currentValue = 0;
+
+  const maxValue = parseInt(input.getAttribute("max"), 10);
+  const minValue = parseInt(input.getAttribute("min"), 10);
+
+  let newValue = currentValue + adjustment;
+
+  if (newValue > maxValue) {
+    newValue = maxValue;
+  }
+  if (newValue < minValue) {
+    newValue = minValue;
+  }
+
+  input.value = newValue;
+}
 
 function initTermsAndConditions() {
   const agreeButton = document.getElementById("agree-to-terms");
