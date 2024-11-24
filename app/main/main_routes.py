@@ -34,6 +34,12 @@ def search_customer():
     return AnalyticsManager().search_customer()
 
 
+@main.route("/purchase/search")
+@login_required
+def search_purchase():
+    return PurchaseManager().search_product()
+
+
 @main.route("/purchase", methods=["GET", "POST"])
 @login_required
 def purchase():
