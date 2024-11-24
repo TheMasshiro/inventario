@@ -13,7 +13,69 @@ USER_INVENTORY_QUERY = """
 
 
 class Analytics:
-    pass
+    def get_low_stock_products(self):
+        query = """
+            SELECT *
+            FROM products
+            WHERE inventory_id = ? AND stock <= 10
+            ORDER BY stock;
+        """
+        try:
+            with get_db_connection() as conn:
+                cur = conn.cursor()
+                result = cur.execute(
+                    USER_INVENTORY_QUERY, (current_user.user_id,)
+                ).fetchone()
+
+                if result is None:
+                    logging.error("No inventory found for the current user.")
+                    return []
+
+                inventory_id = result["inventory_id"]
+
+                cur.execute(query, (inventory_id,))
+                products = cur.fetchall()
+
+                return products or []
+        except sqlite3.DatabaseError as e:
+            logging.error(f"Unexpected error while fetching low stock products: {e}")
+            return []
+
+    def get_best_selling_products(self):
+        query = """
+            SELECT 
+                product.product_id,
+                product.product_name,
+                SUM(sale.sold) as total_sold,
+                product.price,
+                product.supplier_name
+            FROM sales sale
+            JOIN products product ON sale.product_id = product.product_id
+            WHERE sale.inventory_id = ? AND sale.sold > 0
+            GROUP BY product.product_id, product.product_name, product.price , product.supplier_name
+            ORDER BY total_sold DESC;
+        """
+
+        try:
+            with get_db_connection() as conn:
+                cur = conn.cursor()
+                result = cur.execute(
+                    USER_INVENTORY_QUERY, (current_user.user_id,)
+                ).fetchone()
+
+                if result is None:
+                    logging.error("No inventory found for the current user.")
+                    return []
+
+                inventory_id = result["inventory_id"]
+
+                cur.execute(query, (inventory_id,))
+                products = cur.fetchall()
+
+                return products or []
+        except sqlite3.DatabaseError as e:
+            logging.error(f"Unexpected error while fetching best selling products: {e}")
+            return []
 
 
 class Customers:
