@@ -53,7 +53,28 @@ CREATE TABLE IF NOT EXISTS customers(
     FOREIGN KEY (inventory_id) REFERENCES user_inventory(inventory_id) ON DELETE CASCADE
 );
 
--- Indexes
 CREATE INDEX idx_user_inventory_user_id ON user_inventory(user_id);
 CREATE INDEX idx_product_inventory_id ON products(inventory_id);
 CREATE INDEX idx_product_supplier_id ON products(supplier_id);
+
+CREATE INDEX idx_suppliers_inventory_id ON suppliers(inventory_id);
+CREATE INDEX idx_suppliers_email ON suppliers(email);
+CREATE INDEX idx_suppliers_company_name ON suppliers(company_name);
+CREATE INDEX idx_suppliers_status ON suppliers(status);
+
+CREATE INDEX idx_products_product_name ON products(product_name);
+CREATE INDEX idx_products_supplier_name ON products(supplier_name);
+CREATE INDEX idx_products_last_updated ON products(last_updated);
+CREATE INDEX idx_products_stock ON products(stock);
+
+CREATE INDEX idx_sales_inventory_id ON sales(inventory_id);
+CREATE INDEX idx_sales_product_id ON sales(product_id);
+CREATE INDEX idx_sales_sale_date ON sales(sale_date);
+
+CREATE INDEX idx_customers_inventory_id ON customers(inventory_id);
+CREATE INDEX idx_customers_customer_name ON customers(customer_name);
+
+CREATE INDEX idx_products_inv_supplier ON products(inventory_id, supplier_id);
+CREATE INDEX idx_sales_inv_date ON sales(inventory_id, sale_date);
+CREATE INDEX idx_products_inv_stock ON products(inventory_id, stock);
+CREATE INDEX idx_suppliers_inv_status ON suppliers(inventory_id, status);
