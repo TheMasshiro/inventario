@@ -474,6 +474,12 @@ class Inventory:
             DELETE FROM products 
             WHERE product_id = ? AND inventory_id = ?
         """
+
+        sales_delete_query = """
+            DELETE FROM sales
+            WHERE product_id = ? AND inventory_id = ?
+        """
+
         try:
             with get_db_connection() as conn:
                 cur = conn.cursor()
@@ -494,6 +500,15 @@ class Inventory:
                         inventory_id,
                     ),
                 )
+
+                cur.execute(
+                    sales_delete_query,
+                    (
+                        product_id,
+                        inventory_id,
+                    ),
+                )
+
                 conn.commit()
                 return True
         except sqlite3.DatabaseError as e:
